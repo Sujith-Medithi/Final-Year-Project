@@ -1,0 +1,19 @@
+# Python & Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local archives and scratch
+scratch/
+archive/
+Datasets.zip
+*.log

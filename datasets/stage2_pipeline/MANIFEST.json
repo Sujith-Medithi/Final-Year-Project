@@ -1,0 +1,38 @@
+{
+  "dataset_name": "stage2_pipeline",
+  "dataset_version": "v1.0-parity-fix",
+  "cbmc_version": "6.6.0 (cbmc-6.6.0-x86_64-linux)",
+  "pycparser_version": "3.00",
+  "cbmc_flags": [
+    "--unwind",
+    "5"
+  ],
+  "row_count": 50,
+  "label_distribution": {
+    "3": 34,
+    "2": 10,
+    "0": 6
+  },
+  "sha256_dataset_csv": "b331078c78f172f69658556925f8e5ae8b80cbbb9606c3c84e856bc971a2df71",
+  "splits_summary": {
+    "train_rows": 35,
+    "val_rows": 5,
+    "test_rows": 10,
+    "train_families": [
+      "zero_leakage",
+      "arithmetic",
+      "array_lookup",
+      "bitwise",
+      "direct_leakage",
+      "implicit_flow",
+      "loop_accumulator"
+    ],
+    "val_families": [
+      "nested_branches"
+    ],
+    "test_families": [
+      "mixed_control_data",
+      "partial_leakage"
+    ]
+  }
+}

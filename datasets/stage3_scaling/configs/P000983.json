@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "sec_param",
+    "pub_config"
+  ],
+  "high_vars": [
+    "sec_param"
+  ],
+  "low_vars": [
+    "pub_config"
+  ]
+}

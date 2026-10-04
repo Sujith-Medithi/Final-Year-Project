@@ -1,0 +1,16 @@
+{
+  "dataset_name": "stage1_smoke",
+  "dataset_version": "v1.0-parity-fix",
+  "cbmc_version": "6.6.0 (cbmc-6.6.0-x86_64-linux)",
+  "pycparser_version": "3.00",
+  "cbmc_flags": [
+    "--unwind",
+    "5"
+  ],
+  "row_count": 12,
+  "label_distribution": {
+    "3": 10,
+    "0": 2
+  },
+  "sha256_dataset_csv": "a559f2eb55a368a470105733996dc47018fd68bf3caa538421772cf691606ded"
+}

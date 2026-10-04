@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "key_in",
+    "pub_in"
+  ],
+  "high_vars": [
+    "key_in"
+  ],
+  "low_vars": [
+    "pub_in"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "sec_token",
+    "pub_nonce"
+  ],
+  "high_vars": [
+    "sec_token"
+  ],
+  "low_vars": [
+    "pub_nonce"
+  ]
+}

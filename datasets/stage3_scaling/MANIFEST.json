@@ -1,0 +1,38 @@
+{
+  "dataset_name": "stage3_scaling",
+  "dataset_version": "v1.0-parity-fix",
+  "cbmc_version": "6.6.0 (cbmc-6.6.0-x86_64-linux)",
+  "pycparser_version": "3.00",
+  "cbmc_flags": [
+    "--unwind",
+    "5"
+  ],
+  "row_count": 1000,
+  "label_distribution": {
+    "3": 675,
+    "2": 200,
+    "0": 125
+  },
+  "sha256_dataset_csv": "9787db7b3bc5eb9526f1f2ec1f6ba72dda30bf1ff51ce36e0b370d51603607fe",
+  "splits_summary": {
+    "train_rows": 700,
+    "val_rows": 100,
+    "test_rows": 200,
+    "train_families": [
+      "zero_leakage",
+      "arithmetic",
+      "array_lookup",
+      "bitwise",
+      "direct_leakage",
+      "implicit_flow",
+      "loop_accumulator"
+    ],
+    "val_families": [
+      "nested_branches"
+    ],
+    "test_families": [
+      "mixed_control_data",
+      "partial_leakage"
+    ]
+  }
+}
