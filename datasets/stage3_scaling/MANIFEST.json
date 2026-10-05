@@ -34,5 +34,38 @@
       "mixed_control_data",
       "partial_leakage"
     ]
-  }
+  },
+  "dataset_sha256": "251c85a5b159afa4f7dff5ffb11e2e32971d3d5f9048d936022fdd96ef6ad6c6",
+  "feature_count": 29,
+  "feature_names": [
+    "loc",
+    "num_instructions",
+    "num_branches",
+    "num_loops",
+    "num_functions",
+    "num_variables",
+    "num_arrays",
+    "num_structure",
+    "num_union",
+    "num_high_inputs",
+    "num_low_inputs",
+    "num_explicit_flows",
+    "num_culprit_blocks",
+    "num_implicit_flows",
+    "num_information_leak",
+    "num_secret_dependent_prints",
+    "num_assumptions",
+    "num_assertions",
+    "num_array_accesses",
+    "taint_ratio",
+    "secret_branch_ratio",
+    "secret_memory_ratio",
+    "max_loop_bound_const",
+    "loop_to_unwind_ratio",
+    "num_tainted_returns",
+    "num_tainted_globals",
+    "num_tainted_assertions",
+    "max_taint_depth",
+    "num_secret_bitops"
+  ]
 }
