@@ -1,0 +1,9 @@
+{
+  "actual_mqil_leakage": 31,
+  "actual_mqil_assertions_total": 993,
+  "mqil_leak_ratio": 0.0312,
+  "failed_details": [],
+  "cbmc_verified": true,
+  "cbmc_exit_code": 10,
+  "cbmc_status": "FAILED"
+}

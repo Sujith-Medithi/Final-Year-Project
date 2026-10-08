@@ -1,0 +1,14 @@
+{
+  "input_vars": [
+    "sec_k_0",
+    "sec_k_1",
+    "pub_v_0"
+  ],
+  "high_vars": [
+    "sec_k_0",
+    "sec_k_1"
+  ],
+  "low_vars": [
+    "pub_v_0"
+  ]
+}

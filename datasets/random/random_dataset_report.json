@@ -1,0 +1,158 @@
+{
+  "total_programs": 100,
+  "minimum_loc": 515,
+  "maximum_loc": 1723,
+  "average_loc": 902.89,
+  "unique_source_hashes": 100,
+  "cbmc_success_count": 100,
+  "cbmc_failure_count": 0,
+  "feature_statistics": {
+    "loc": {
+      "minimum": 515,
+      "maximum": 1723,
+      "mean": 902.89
+    },
+    "num_instructions": {
+      "minimum": 244,
+      "maximum": 808,
+      "mean": 426.49
+    },
+    "num_branches": {
+      "minimum": 29,
+      "maximum": 110,
+      "mean": 55.61
+    },
+    "num_loops": {
+      "minimum": 9,
+      "maximum": 36,
+      "mean": 17.5
+    },
+    "num_functions": {
+      "minimum": 5,
+      "maximum": 13,
+      "mean": 9.02
+    },
+    "num_variables": {
+      "minimum": 87,
+      "maximum": 238,
+      "mean": 144.79
+    },
+    "num_arrays": {
+      "minimum": 4,
+      "maximum": 5,
+      "mean": 4.1
+    },
+    "num_structure": {
+      "minimum": 6,
+      "maximum": 15,
+      "mean": 10.52
+    },
+    "num_union": {
+      "minimum": 3,
+      "maximum": 4,
+      "mean": 3.41
+    },
+    "num_high_inputs": {
+      "minimum": 1,
+      "maximum": 3,
+      "mean": 2.08
+    },
+    "num_low_inputs": {
+      "minimum": 1,
+      "maximum": 3,
+      "mean": 2.05
+    },
+    "num_explicit_flows": {
+      "minimum": 0,
+      "maximum": 700,
+      "mean": 216.64
+    },
+    "num_culprit_blocks": {
+      "minimum": 0,
+      "maximum": 6,
+      "mean": 1.3
+    },
+    "num_implicit_flows": {
+      "minimum": 0,
+      "maximum": 20,
+      "mean": 3.2
+    },
+    "num_information_leak": {
+      "minimum": 0,
+      "maximum": 12,
+      "mean": 5.4
+    },
+    "num_secret_dependent_prints": {
+      "minimum": 0,
+      "maximum": 0,
+      "mean": 0.0
+    },
+    "num_assumptions": {
+      "minimum": 2,
+      "maximum": 6,
+      "mean": 4.13
+    },
+    "num_assertions": {
+      "minimum": 74,
+      "maximum": 203,
+      "mean": 123.86
+    },
+    "num_array_accesses": {
+      "minimum": 293,
+      "maximum": 1058,
+      "mean": 539.08
+    },
+    "taint_ratio": {
+      "minimum": 0.0,
+      "maximum": 0.0474,
+      "mean": 0.0167
+    },
+    "secret_branch_ratio": {
+      "minimum": 0.0,
+      "maximum": 0.0759,
+      "mean": 0.0112
+    },
+    "secret_memory_ratio": {
+      "minimum": 0.0,
+      "maximum": 0.006,
+      "mean": 0.0004
+    },
+    "max_loop_bound_const": {
+      "minimum": 2,
+      "maximum": 2,
+      "mean": 2.0
+    },
+    "loop_to_unwind_ratio": {
+      "minimum": 0.4,
+      "maximum": 0.4,
+      "mean": 0.4
+    },
+    "num_tainted_returns": {
+      "minimum": 0,
+      "maximum": 0,
+      "mean": 0.0
+    },
+    "num_tainted_globals": {
+      "minimum": 0,
+      "maximum": 1,
+      "mean": 0.7
+    },
+    "num_tainted_assertions": {
+      "minimum": 0,
+      "maximum": 6,
+      "mean": 2.7
+    },
+    "max_taint_depth": {
+      "minimum": 0,
+      "maximum": 6,
+      "mean": 2.6
+    },
+    "num_secret_bitops": {
+      "minimum": 2,
+      "maximum": 76,
+      "mean": 25.42
+    }
+  },
+  "regenerated_programs_count": 0,
+  "regeneration_log": []
+}
