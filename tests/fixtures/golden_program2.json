@@ -1,0 +1,14 @@
+{
+  "input_vars": [
+    "pin",
+    "seed",
+    "user_id"
+  ],
+  "high_vars": [
+    "pin",
+    "seed"
+  ],
+  "low_vars": [
+    "user_id"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+    "input_vars": [
+        "key_sets",
+        "des_key",
+        "data_block"
+    ],
+    "high_vars": [
+        "key_sets",
+        "des_key"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "input_vars": [
+        "sha_info_digest",
+        "sha_info_data"
+    ],
+    "high_vars": [
+        "sha_info_digest"
+    ]
+}

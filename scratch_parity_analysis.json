@@ -1,0 +1,244 @@
+{
+  "P000001": {
+    "family": "zero_leakage",
+    "dataset_row": {
+      "program_id": "P000001",
+      "family_id": "zero_leakage",
+      "source_file": "datasets\\stage2_pipeline\\programs\\P000001.c",
+      "miter_file": "datasets\\stage2_pipeline\\miters\\P000001_miter.c",
+      "all_inputs": "high_sec,pub_val",
+      "high_inputs": "high_sec",
+      "low_inputs": "pub_val",
+      "sha256": "9593f1bafb2ffeedc130695fd09e50257c6957fd89c85f31f4d638d71161e156",
+      "loc": 37,
+      "num_instructions": 10,
+      "num_branches": 0,
+      "num_loops": 0,
+      "num_functions": 3,
+      "num_variables": 20,
+      "num_arrays": 0,
+      "num_structure": 0,
+      "num_union": 0,
+      "num_high_inputs": 1,
+      "num_low_inputs": 1,
+      "num_explicit_flows": 3,
+      "num_culprit_blocks": 0,
+      "num_implicit_flows": 0,
+      "num_information_leak": 3,
+      "num_secret_dependent_prints": 0,
+      "num_assumptions": 2,
+      "num_assertions": 4,
+      "num_array_accesses": 0,
+      "taint_ratio": 0.15,
+      "secret_branch_ratio": 0.0,
+      "secret_memory_ratio": 0.0,
+      "actual_mqil_leakage": 0,
+      "actual_mqil_assertions_total": 4
+    },
+    "extracted_feats": {
+      "loc": 18,
+      "num_instructions": 6,
+      "num_branches": 0,
+      "num_loops": 0,
+      "num_functions": 2,
+      "num_variables": 8,
+      "num_arrays": 0,
+      "num_structure": 0,
+      "num_union": 0,
+      "num_high_inputs": 1,
+      "num_low_inputs": 1,
+      "num_explicit_flows": 3,
+      "num_culprit_blocks": 0,
+      "num_implicit_flows": 0,
+      "num_information_leak": 3,
+      "num_secret_dependent_prints": 0,
+      "num_assumptions": 2,
+      "num_assertions": 4,
+      "num_array_accesses": 0,
+      "taint_ratio": 0.375,
+      "secret_branch_ratio": 0.0,
+      "secret_memory_ratio": 0.0
+    },
+    "source_loc": 18,
+    "miter_loc": 41,
+    "group_a_source": {
+      "loc": 18,
+      "num_instructions": 6,
+      "num_branches": 0,
+      "num_loops": 0,
+      "num_functions": 2,
+      "num_variables": 8,
+      "num_arrays": 0,
+      "num_structure": 0,
+      "num_union": 0,
+      "traces": {
+        "instructions": [
+          [
+            "Return",
+            5,
+            "return (temp + (p * 2)) + 1;"
+          ],
+          [
+            "Assignment",
+            13,
+            "out = zero_kernel_0(high_sec, pub_val);"
+          ],
+          [
+            "FuncCall",
+            13,
+            "out = zero_kernel_0(high_sec, pub_val);"
+          ],
+          [
+            "Assignment",
+            14,
+            "glob_zero_0 = out;"
+          ],
+          [
+            "Assignment",
+            16,
+            "dead = 0;"
+          ],
+          [
+            "Return",
+            17,
+            "return 0;"
+          ]
+        ],
+        "branches": [],
+        "loops": [],
+        "functions": [
+          [
+            "FuncDef",
+            3,
+            "function zero_kernel_0()"
+          ],
+          [
+            "FuncDef",
+            8,
+            "function main()"
+          ]
+        ],
+        "variables": [
+          [
+            "Decl",
+            1,
+            "int glob_zero_0;"
+          ],
+          [
+            "Decl",
+            3,
+            "int zero_kernel_0(int s, int p) {"
+          ],
+          [
+            "Decl",
+            3,
+            "int zero_kernel_0(int s, int p) {"
+          ],
+          [
+            "Decl",
+            4,
+            "int temp = (s + 0) * 0;"
+          ],
+          [
+            "Decl",
+            10,
+            "int high_sec;"
+          ],
+          [
+            "Decl",
+            11,
+            "int pub_val;"
+          ],
+          [
+            "Decl",
+            12,
+            "int out;"
+          ],
+          [
+            "Decl",
+            15,
+            "int dead = high_sec ^ high_sec;"
+          ]
+        ],
+        "arrays": [],
+        "structure": [],
+        "union": []
+      }
+    },
+    "group_a_miter": {
+      "loc": 41,
+      "num_instructions": 14,
+      "num_branches": 0,
+      "num_loops": 0,
+      "num_functions": 3,
+      "num_variables": 20,
+      "num_arrays": 0,
+      "num_structure": 0,
+      "num_union": 0
+    },
+    "group_b": {
+      "num_high_inputs": 1,
+      "num_low_inputs": 1,
+      "num_explicit_flows": 3,
+      "num_culprit_blocks": 0,
+      "num_implicit_flows": 0,
+      "num_information_leak": 3,
+      "num_secret_dependent_prints": 0,
+      "num_assumptions": 2,
+      "num_assertions": 4,
+      "num_array_accesses": 0,
+      "traces": {
+        "explicit_flows": [
+          [
+            "Assignment",
+            13,
+            "out = zero_kernel_0(high_sec, pub_val);",
+            [
+              "high_sec"
+            ]
+          ],
+          [
+            "Assignment",
+            14,
+            "glob_zero_0 = out;",
+            [
+              "out"
+            ]
+          ],
+          [
+            "Decl",
+            15,
+            "int dead = high_sec ^ high_sec;",
+            [
+              "high_sec"
+            ]
+          ]
+        ],
+        "culprit_blocks": [],
+        "implicit_flows": [],
+        "information_leaks": [
+          [
+            "Assignment",
+            13,
+            "out = zero_kernel_0(high_sec, pub_val);",
+            "out"
+          ],
+          [
+            "Assignment",
+            14,
+            "glob_zero_0 = out;",
+            "glob_zero_0"
+          ],
+          [
+            "Decl",
+            15,
+            "int dead = high_sec ^ high_sec;",
+            "dead"
+          ]
+        ],
+        "secret_dependent_prints": [],
+        "array_accesses": []
+      },
+      "func_taints": {
+        "zero_kernel_0": {
+          "entry_taint": 

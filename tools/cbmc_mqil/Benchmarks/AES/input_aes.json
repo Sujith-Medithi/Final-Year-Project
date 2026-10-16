@@ -1,0 +1,9 @@
+{
+    "input_vars": [
+        "key",
+        "statemt"
+    ],
+    "high_vars": [
+        "key"
+    ]
+}

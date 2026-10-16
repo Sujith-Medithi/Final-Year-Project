@@ -1,0 +1,11 @@
+{
+    "input_vars": [
+        "input",
+        "key",
+        "sub_key"
+    ],
+    "high_vars": [
+        "key",
+        "sub_key"
+    ]
+}
