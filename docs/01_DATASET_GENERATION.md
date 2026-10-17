@@ -139,10 +139,11 @@ To ensure machine learning models learn generalizable security principles rather
 
 Every row in the assembled dataset records:
 * **Program Identifiers**: `program_id`, `family_id`, `source_file`.
-* **Group A Features** (Program Structure at Miter Version): `loc`, `num_instructions`, `num_branches`, `num_loops`, `num_functions`, `num_variables`, `num_arrays`, `num_structure`, `num_union`.
-* **Group B Features** (Security Features): `num_high_inputs`, `num_low_inputs`, `num_explicit_flows`, `num_culprit_blocks`, `num_implicit_flows`, `num_information_leak`, `num_secret_dependent_prints`, `num_assumptions`, `num_assertions`, `num_array_accesses`.
-* **Normalized Ratios**: `taint_ratio`, `secret_branch_ratio`, `secret_memory_ratio`.
-* **Ground-Truth Target**: `actual_mqil_leakage` (`#leak` = number of failed CBMC assertions) and `actual_mqil_assertions_total`.
+* **Group A Features** (Program Structure, 10 features): `loc`, `num_instructions`, `num_branches`, `num_loops`, `num_functions`, `num_variables`, `num_arrays`, `num_structure`, `num_union`, `loop_to_unwind_ratio`.
+* **Group B Features** (Security & Taint Flow, 14 features): `num_high_inputs`, `num_low_inputs`, `num_explicit_flows`, `num_culprit_blocks`, `num_implicit_flows`, `num_information_leak`, `num_secret_dependent_prints`, `num_assumptions`, `num_assertions`, `num_array_accesses`, `num_tainted_returns`, `num_tainted_globals`, `max_taint_depth`, `num_secret_bitops`.
+* **Group C Features** (Normalized Security Ratios, 3 features): `taint_ratio`, `secret_branch_ratio`, `secret_memory_ratio`.
+* **Total Input Features**: **27 features** ($10 + 14 + 3$).
+* **Ground-Truth Target**: `actual_mqil_leakage` (`#leak` = number of failed CBMC assertions) and auxiliary metadata `actual_mqil_assertions_total`, `mqil_leak_ratio`.
 
 > [!IMPORTANT]
 > The target column `actual_mqil_leakage` is strictly for model training and evaluation. It must never be included as an input feature during training or inference.

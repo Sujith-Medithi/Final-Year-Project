@@ -771,16 +771,14 @@ main.py
 | 20| `taint_ratio` | Security Ratio | Proportion of tainted variables | Miter AST | `num_information_leak / miter_variables` | Feature ($X_{20}$) |
 | 21| `secret_branch_ratio`| Security Ratio | Proportion of tainted branches | Miter AST | `num_culprit_blocks / miter_branches` | Feature ($X_{21}$) |
 | 22| `secret_memory_ratio`| Security Ratio | Secret-indexed memory access | Miter AST | Secret indices / total array accesses | Feature ($X_{22}$) |
-| 23| `max_loop_bound_const`| Structural Loop | Largest constant loop upper bound | Source AST | `extract_loop_bound_from_ast` | Feature ($X_{23}$) |
-| 24| `loop_to_unwind_ratio`| Structural Ratio | Loop bound to CBMC unwind ratio | Source AST | `max_loop_bound_const / 5.0` | Feature ($X_{24}$) |
-| 25| `num_tainted_returns`| Security Flow | Returns outputting secret data | Miter AST | `Return.expr` contains tainted vars | Feature ($X_{25}$) |
-| 26| `num_tainted_globals`| Security Flow | Global variables tainted by secret | Miter AST | Unique tainted base global variables | Feature ($X_{26}$) |
-| 27| `num_tainted_assertions`| Security Verif | Equivalence assertions on secrets | Miter AST | `assert` calls checking tainted vars | Feature ($X_{27}$) |
-| 28| `max_taint_depth`| Security Graph | Longest dependency chain from secret | Miter AST | Longest acyclic path in taint dep graph | Feature ($X_{28}$) |
-| 29| `num_secret_bitops`| Security Op | Bitwise operations on secret data | Miter AST | Bitwise ops (`>>`, `&`, `^`, etc.) on secrets | Feature ($X_{29}$) |
-| 30| `actual_mqil_leakage`| **Target** | **Quantitative information leakage** | **CBMC Solver** | **Failed equivalence assertions count** | **Target ($y$)** |
-| 31| `leakage_value`| Target Alias | Normalized / alias leakage target | CBMC Solver | Scaled / mapped leakage value | Target ($y$) |
-| 32| `actual_mqil_assertions_total`| Metadata | Total assertions verified | CBMC Solver | Total equivalence assertions count | Auxiliary |
+| 23| `loop_to_unwind_ratio`| Structural Ratio | Loop bound to CBMC unwind ratio | Source AST | `max_loop_bound / 5.0` | Feature ($X_{23}$) |
+| 24| `num_tainted_returns`| Security Flow | Returns outputting secret data | Miter AST | `Return.expr` contains tainted vars | Feature ($X_{24}$) |
+| 25| `num_tainted_globals`| Security Flow | Global variables tainted by secret | Miter AST | Unique tainted base global variables | Feature ($X_{25}$) |
+| 26| `max_taint_depth`| Security Graph | Longest dependency chain from secret | Miter AST | Longest acyclic path in taint dep graph | Feature ($X_{26}$) |
+| 27| `num_secret_bitops`| Security Op | Bitwise operations on secret data | Miter AST | Bitwise ops (`>>`, `&`, `^`, etc.) on secrets | Feature ($X_{27}$) |
+| 28| `actual_mqil_leakage`| **Target** | **Quantitative information leakage** | **CBMC Solver** | **Failed equivalence assertions count** | **Target ($y$)** |
+| 29| `leakage_value`| Target Alias | Normalized / alias leakage target | CBMC Solver | Scaled / mapped leakage value | Target ($y$) |
+| 30| `actual_mqil_assertions_total`| Metadata | Total assertions verified | CBMC Solver | Total equivalence assertions count | Auxiliary |
 
 ---
 

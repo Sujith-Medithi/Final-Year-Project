@@ -230,7 +230,7 @@ def run_stage2_pipeline(count_per_family: int = 5) -> pd.DataFrame:
         group_a_cols = {
             'loc', 'num_instructions', 'num_branches', 'num_loops', 'num_functions',
             'num_variables', 'num_arrays', 'num_structure', 'num_union',
-            'max_loop_bound_const', 'loop_to_unwind_ratio'
+            'loop_to_unwind_ratio'
         }
         for col, val in variance_summary.items():
             f.write(f"| `{col}` | {'Group A (Source)' if col in group_a_cols else 'Group B / Flow'} | **{val}** |\n")
@@ -459,7 +459,7 @@ def run_stage3_scaling(count_per_family: int = 100, max_workers: int = 8) -> pd.
         group_a_cols = {
             'loc', 'num_instructions', 'num_branches', 'num_loops', 'num_functions',
             'num_variables', 'num_arrays', 'num_structure', 'num_union',
-            'max_loop_bound_const', 'loop_to_unwind_ratio'
+            'loop_to_unwind_ratio'
         }
         for col, val in variance_summary.items():
             grp = 'Group A (Source)' if col in group_a_cols else 'Group B / Flow'

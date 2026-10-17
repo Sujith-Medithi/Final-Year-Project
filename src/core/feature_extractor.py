@@ -25,12 +25,10 @@ FEATURE_COLS: List[str] = [
     "num_information_leak", "num_secret_dependent_prints",
     "num_assumptions", "num_assertions", "num_array_accesses",
     "taint_ratio", "secret_branch_ratio", "secret_memory_ratio",
-    # 7 New Flow & Verification Disambiguation Features
-    "max_loop_bound_const",
+    # New Flow & Verification Disambiguation Features
     "loop_to_unwind_ratio",
     "num_tainted_returns",
     "num_tainted_globals",
-    "num_tainted_assertions",
     "max_taint_depth",
     "num_secret_bitops"
 ]
@@ -310,8 +308,8 @@ def extract_group_a_features(source_c_path: Path, debug: bool = False) -> Dict[s
     vars_counted = extract_d8_variables(ast)
     num_variables = len(vars_counted)
 
-    max_loop_bound_const = extract_loop_bound_from_ast(ast)
-    loop_to_unwind_ratio = round(max_loop_bound_const / 5.0, 4)
+    max_loop_bound = extract_loop_bound_from_ast(ast)
+    loop_to_unwind_ratio = round(max_loop_bound / 5.0, 4)
 
     res = {
         "loc": loc,
@@ -323,7 +321,6 @@ def extract_group_a_features(source_c_path: Path, debug: bool = False) -> Dict[s
         "num_arrays": visitor.num_arrays,
         "num_structure": visitor.num_structure,
         "num_union": visitor.num_union,
-        "max_loop_bound_const": max_loop_bound_const,
         "loop_to_unwind_ratio": loop_to_unwind_ratio,
     }
     if debug:
@@ -577,7 +574,6 @@ def extract_group_b_features(
     num_assumptions = 0
     num_assertions = 0
     num_tainted_returns = 0
-    num_tainted_assertions = 0
     num_secret_bitops = 0
 
     class FinalCounterVisitor(c_ast.NodeVisitor):
@@ -688,16 +684,10 @@ def extract_group_b_features(
             self.generic_visit(node)
 
         def visit_FuncCall(self, node):
-            nonlocal num_secret_dependent_prints, num_assumptions, num_assertions, num_tainted_assertions
+            nonlocal num_secret_dependent_prints, num_assumptions, num_assertions
             fn_name = node.name.name if isinstance(node.name, c_ast.ID) else ""
             if fn_name == "assert":
                 num_assertions += 1
-                arg_ids = set()
-                if node.args and node.args.exprs:
-                    for a in node.args.exprs:
-                        arg_ids |= extract_ids(a)
-                if any(v in tainted_vars for v in arg_ids):
-                    num_tainted_assertions += 1
             elif fn_name == "__CPROVER_assume":
                 num_assumptions += 1
             elif fn_name in PRINT_FUNCS:
@@ -763,7 +753,6 @@ def extract_group_b_features(
         "num_array_accesses": num_array_accesses,
         "num_tainted_returns": num_tainted_returns,
         "num_tainted_globals": num_tainted_globals,
-        "num_tainted_assertions": num_tainted_assertions,
         "max_taint_depth": max_taint_depth,
         "num_secret_bitops": num_secret_bitops,
         # Internal counters for ratio calculation (D2)

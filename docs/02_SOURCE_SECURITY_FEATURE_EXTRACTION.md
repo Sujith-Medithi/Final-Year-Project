@@ -5,72 +5,79 @@
 
 ## 1. Objective
 
-Extract all 21 structural and security features directly from C source code and the generated miter program using Abstract Syntax Tree (AST) parsing with `pycparser`.
+Extract all 27 structural, security, and flow features directly from C source code and the generated miter program using Abstract Syntax Tree (AST) parsing with `pycparser`.
 
-Features are strictly partitioned into the two groups specified in the **MQIL Reference Specification**:
-* **Group A**: Program Structure (*measured at the miter version / Refer MQIL Paper Table I & II*).
-* **Group B**: Security Features (*measured across the whole program*).
-* **Normalized Ratios**: Scale-invariant ratios.
+Features are strictly partitioned into three groups based on the **MQIL Reference Specification & Parity Architecture**:
+* **Group A**: Program Structure (**10 features**, measured on the un-instrumented C source file).
+* **Group B**: Security & Taint Flow Features (**14 features**, measured on the generated miter C file and input specification).
+* **Group C**: Normalized Security Ratios (**3 features**, scale-invariant ratios measured on internal miter counters).
+
+**Total Feature Count**: $10 + 14 + 3 = 27\text{ features}$.
 
 ---
 
-## 2. Group A — Program Structure (at Miter Version)
+## 2. Group A — Program Structure (Measured on Source File)
 
-> **Key Rule from Handwritten Reference**: Group A features are measured on the **generated miter program (`output.c`)**, exactly reflecting the characteristics analyzed by CBMC (as shown in Table I & II of the MQIL paper).
+> **Measurement Rule (Decision C1)**: Group A features capture the syntactic and architectural complexity of the original, un-instrumented C program (`source.c`). System and libc header declarations (`fake_libc`) are excluded by syntactic rule (Decision C4, D8).
 
 | Feature Name | Type | Description |
 | :--- | :--- | :--- |
-| `loc` | Integer | Total physical lines of code in the entire generated miter file. |
-| `num_instructions` | Integer | Total executable C statements across all functions and `main()`. |
-| `num_branches` | Integer | Total control branches (`if`, `switch`, ternary conditionals) in the miter. |
-| `num_loops` | Integer | Total loop constructs (`for`, `while`, `do-while`) in the miter. |
-| `num_functions` | Integer | Total function definitions declared/defined in the miter. |
-| `num_variables` | Integer | Total scalar, pointer, and local variables declared across the miter. |
-| `num_arrays` | Integer | Total array buffers declared in the miter. |
-| `num_structure` | Integer | Total `struct` definitions and struct variable instances. |
-| `num_union` | Integer | Total `union` definitions and union variable instances. |
+| `loc` | Integer | Total physical lines of code in the source file (`len(source.splitlines())`). |
+| `num_instructions` | Integer | Total executable C statements in source AST (`Assignment`, `FuncCall`, `If`, `Return`). |
+| `num_branches` | Integer | Total control branches (`If`, `Switch`, `For`, `While`, `DoWhile`) in source AST. |
+| `num_loops` | Integer | Total loop constructs (`For`, `While`, `DoWhile`) in source AST. |
+| `num_functions` | Integer | Total user-defined function definitions (`FuncDef`) excluding prototypes and libc. |
+| `num_variables` | Integer | Total user variable declarations (globals, locals, struct/union members, func params). |
+| `num_arrays` | Integer | Total array declarations (`ArrayDecl`) across globals, locals, and struct/union fields. |
+| `num_structure` | Integer | Total `struct` definitions and struct variable instance declarations. |
+| `num_union` | Integer | Total `union` definitions and union variable instance declarations. |
+| `loop_to_unwind_ratio` | Float | Ratio of maximum detected loop upper bound constant to CBMC unwind depth: $\text{bound} / 5.0$. |
 
 ---
 
-## 3. Group B — Security Features (Whole Program)
+## 3. Group B — Security & Taint Flow Features (Measured on Miter & Inputs)
 
-These features track data-flow and control-dependence flows originating from sensitive inputs ($h \in H$) through the program:
+> **Measurement Rule (Decision C2, C3)**: Group B features track sensitive information flow, taint propagation, bitwise side-channels, and equivalence checks on the generated **miter program (`miter.c`)**, seeded with high-input variables (`high_vars`) suffixed with `_1` and `_2`.
 
 | Feature Name | Type | Extraction Mechanism & Semantic Meaning |
 | :--- | :--- | :--- |
-| `num_high_inputs` | Integer | Count of sensitive inputs ($|H|$) specified in `input_args.json`. |
+| `num_high_inputs` | Integer | Count of sensitive secret inputs ($|H|$) specified in `input_args.json`. |
 | `num_low_inputs` | Integer | Count of public inputs ($|L|$) specified in `input_args.json`. |
-| `num_explicit_flows` | Integer | Count of statements where a tainted sensitive variable directly taints an expression (data-flow tracking). |
-| `num_culprit_blocks` | Integer | Count of branch conditions (`if`, `switch`) whose predicate expression depends on sensitive data. |
-| `num_implicit_flows` | Integer | Count of statements executed conditionally inside a culprit block (control-dependence flow). |
-| `num_information_leak`| Integer | Count of paths where tainted data reaches observable output variables or return values. |
-| `num_secret_dependent_prints` | Integer | Print/I/O statements with tainted arguments (`printf("%d", key)`). |
-| `num_assumptions` | Integer | Number of assumptions injected into the miter (`__CPROVER_assume(h1 != h2)`). |
-| `num_assertions` | Integer | Total equivalence assertions injected into the miter (`assert(v1 == v2)`). |
-| `num_array_accesses` | Integer | Memory accesses with secret-dependent index expressions (e.g. $x = \text{secret} \ \& \ y; \ z = \text{array}[x]$). |
+| `num_explicit_flows` | Integer | Statements where a tainted variable directly taints an expression (data-flow tracking). |
+| `num_culprit_blocks` | Integer | Branch constructs (`If`, `Switch`, `For`, `While`, `DoWhile`) whose condition depends on secret data. |
+| `num_implicit_flows` | Integer | Simple statements executed conditionally inside culprit blocks (control-dependence flow). |
+| `num_information_leak` | Integer | Previously clean variables that become tainted via explicit sensitive data flows. |
+| `num_secret_dependent_prints` | Integer | Print/I/O calls (`printf`, `puts`, `sprintf`, etc.) with tainted argument expressions. |
+| `num_assumptions` | Integer | Assumptions injected into the miter (`__CPROVER_assume(...)`). |
+| `num_assertions` | Integer | Equivalence check assertions injected into the miter (`assert(...)`). |
+| `num_array_accesses` | Integer | Total array subscript accesses (`ArrayRef`) evaluated across the miter AST. |
+| `num_tainted_returns` | Integer | Return statements where the returned expression evaluates sensitive tainted data. |
+| `num_tainted_globals` | Integer | Unique global variables that become tainted through execution. |
+| `max_taint_depth` | Integer | Maximum acyclic taint propagation chain length from secret seeds in the dependency graph. |
+| `num_secret_bitops` | Integer | Bitwise operations (`>>`, `<<`, `&`, `|`, `^`) operating on tainted operands. |
 
 ---
 
-## 4. Normalized Ratios (Scale-Invariant Indicators)
+## 4. Group C — Normalized Security Ratios (Scale-Invariant Indicators)
 
-To ensure machine learning models generalize seamlessly to large programs (kLOC) without bias from raw line counts, we compute three normalized ratios:
+> **Measurement Rule (Decision D2, K21)**: All ratios are computed strictly using numerators and denominators measured on the **same file** (internal miter counters) to guarantee that all ratio values lie within $[0.0, 1.0]$.
 
 ### 1. Taint Ratio
-$$\text{taint\_ratio} = \frac{\text{num\_information\_leak}}{\max(\text{num\_variables}, 1)}$$
-*(Also recorded relative to assertions: $\frac{\text{num\_information\_leak}}{\max(\text{num\_assertions}, 1)}$)*. Measures the fraction of the program's variable space that leaks secrets.
+$$\text{taint\_ratio} = \frac{\text{num\_information\_leak}}{\max(V_{\text{miter}}, 1)}$$
+Measures the proportion of the miter variable space ($V_{\text{miter}}$) tainted by secret inputs.
 
 ### 2. Secret Branch Ratio
-$$\text{secret\_branch\_ratio} = \frac{\text{num\_culprit\_blocks}}{\max(\text{num\_branches}, 1)}$$
-Measures the proportion of control-flow branches vulnerable to timing / side-channel attacks.
+$$\text{secret\_branch\_ratio} = \frac{\text{num\_culprit\_blocks}}{\max(B_{\text{miter}}, 1)}$$
+Measures the proportion of control-flow branches ($B_{\text{miter}}$) vulnerable to timing/control leakage.
 
 ### 3. Secret Memory Ratio
-$$\text{secret\_memory\_ratio} = \frac{\text{num\_arrays}}{\max(\text{num\_array\_accesses}, 1)}$$
-Measures the ratio of total memory buffers to secret-dependent indexing access operations.
+$$\text{secret\_memory\_ratio} = \frac{\text{num\_secret\_indexed\_accesses}}{\max(\text{num\_array\_accesses}, 1)}$$
+Measures the fraction of array accesses indexed by secret-dependent expressions (cache-timing vulnerability).
 
 ---
 
 ## 5. Person 1 Deliverable Checkpoint
 
 Person 1 produces:
-* `mqil_ml/core/feature_extractor.py`: Automated extractor processing the C program and miter output.
-* Output dictionary containing all 21 features for every benchmark in the dataset.
+* `src/core/feature_extractor.py`: Automated extractor processing the C program and miter output.
+* Output dictionary containing all **27 features** for every benchmark in the dataset.

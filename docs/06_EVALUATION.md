@@ -33,10 +33,10 @@ To confirm the research hypothesis that **security and taint features are fundam
 
 | Feature Subset | Features Included | Scientific Hypothesis |
 | :--- | :--- | :--- |
-| **Set 1: Structural Only (Group A)** | `loc`, `num_instructions`, `num_branches`, `num_loops`, `num_functions`, `num_variables`, `num_arrays`, `num_structure`, `num_union` | *Expected Low $R^2$*: Code size alone cannot determine whether code leaks secrets or operates on public data. |
-| **Set 2: Security Features Only (Group B)** | `num_high_inputs`, `num_low_inputs`, `num_explicit_flows`, `num_culprit_blocks`, `num_implicit_flows`, `num_information_leak`, `num_assumptions`, `num_assertions`, `num_array_accesses` | *Expected High $R^2$*: Taint and dependency tracking capture actual leakage pathways directly. |
-| **Set 3: Normalized Ratios Only** | `taint_ratio`, `secret_branch_ratio`, `secret_memory_ratio` | *Compact Baseline*: Scale-invariant summary of program vulnerability. |
-| **Set 4: Full Feature Set (All Features)** | Group A + Group B + Normalized Ratios | *Optimal Performance*: Combines structural complexity with precise security flow semantics. |
+| **Set 1: Structural Only (Group A, 10 features)** | `loc`, `num_instructions`, `num_branches`, `num_loops`, `num_functions`, `num_variables`, `num_arrays`, `num_structure`, `num_union`, `loop_to_unwind_ratio` | *Expected Low $R^2$*: Code size alone cannot determine whether code leaks secrets or operates on public data. |
+| **Set 2: Security & Flow Features Only (Group B, 14 features)** | `num_high_inputs`, `num_low_inputs`, `num_explicit_flows`, `num_culprit_blocks`, `num_implicit_flows`, `num_information_leak`, `num_secret_dependent_prints`, `num_assumptions`, `num_assertions`, `num_array_accesses`, `num_tainted_returns`, `num_tainted_globals`, `max_taint_depth`, `num_secret_bitops` | *Expected High $R^2$*: Taint and dependency tracking capture actual leakage pathways directly. |
+| **Set 3: Normalized Ratios Only (Group C, 3 features)** | `taint_ratio`, `secret_branch_ratio`, `secret_memory_ratio` | *Compact Baseline*: Scale-invariant summary of program vulnerability. |
+| **Set 4: Full Feature Set (All 27 Features)** | Group A (10) + Group B (14) + Group C (3) | *Optimal Performance*: Combines structural complexity with precise security flow semantics and normalized ratios. |
 
 ---
 

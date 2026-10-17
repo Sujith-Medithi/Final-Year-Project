@@ -20,7 +20,7 @@ FP/
 │   ├── 07_INTERPRETABILITY_AND_EXPERIMENTS.md # Explainability and SHAP attribution design
 │   ├── 08_END_TO_END_PROJECT.md          # Full system architecture and workflow
 │   ├── HANDOVER_PERSON1_TO_PERSON2.md    # Boundary contract between Person 1 and Person 2
-│   ├── FEATURE_DICTIONARY.md             # Exhaustive column definitions of all 22 features
+│   ├── FEATURE_DICTIONARY.md             # Exhaustive column definitions of all 27 features
 │   ├── PROJECT_STRUCTURE.md              # [This Document] Directory layout and design rationale
 │   └── MQIL_Research_Paper.pdf           # Original IEEE ESL 2026 research paper
 │

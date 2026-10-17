@@ -1,19 +1,21 @@
 # MQIL Feature Dictionary (Feature Parity Specification)
 
-This document specifies the exact counting rules, target files (source vs. miter), pycparser AST node types, filtering rules/exclusions, and worked examples for all 22 feature columns and the target column in the MQIL dataset pipeline.
+This document specifies the exact counting rules, target files (source vs. miter), pycparser AST node types, filtering rules/exclusions, and worked examples for all 27 feature columns and the target column in the MQIL dataset pipeline.
 
 ---
 
 ## 0. Frozen Interfaces & Schema
 
-The 22 input feature columns and the target column are frozen in the following exact order:
+The 27 input feature columns and the target column are ordered as follows (single source of truth matching `src/core/feature_extractor.py:FEATURE_COLS`):
 
 ```
 loc, num_instructions, num_branches, num_loops, num_functions, num_variables,
 num_arrays, num_structure, num_union, num_high_inputs, num_low_inputs,
 num_explicit_flows, num_culprit_blocks, num_implicit_flows, num_information_leak,
 num_secret_dependent_prints, num_assumptions, num_assertions, num_array_accesses,
-taint_ratio, secret_branch_ratio, secret_memory_ratio, actual_mqil_leakage
+taint_ratio, secret_branch_ratio, secret_memory_ratio,
+loop_to_unwind_ratio, num_tainted_returns, num_tainted_globals,
+max_taint_depth, num_secret_bitops, actual_mqil_leakage
 ```
 
 - Target: `actual_mqil_leakage` (CBMC failed equivalence assertions).
@@ -115,6 +117,14 @@ Group A features capture the syntactic and architectural complexity of the origi
 - **Node Types**: `Union` (definitions), `Decl` of union type.
 - **Exclusions**: Header/libc AST nodes.
 - **Worked Example (`golden_program2.c`)**: `union Reg` definition + `reg` instance $\rightarrow$ `num_union = 2`.
+
+---
+
+### `loop_to_unwind_ratio`
+- **Measured On**: Source C file & Verification Parameters
+- **Counting Rule**: Extracts constant upper bound integers from loop conditions (`For`, `While`, `DoWhile`) comparing a loop index to an integer literal (`c_ast.Constant`), then computes the ratio to the CBMC default loop unwinding bound (5.0):
+  $$\text{loop\_to\_unwind\_ratio} = \text{round}\left(\frac{\text{max\_loop\_bound}}{5.0}, 4\right)$$
+- **Purpose**: Disambiguates whether verification timeouts or unwinding assertion failures are likely due to loop bounds exceeding CBMC unwind limits.
 
 ---
 
@@ -232,6 +242,36 @@ Group B features track sensitive information flow, security annotations, and equ
 - **Worked Example (`golden_program2.c`)**:
   - All valid array subscript expressions across copy 1, copy 2, helpers, and equivalence loops.
   - Total $\rightarrow$ `num_array_accesses = 23`.
+
+---
+
+### `num_tainted_returns`
+- **Measured On**: Miter C file
+- **Counting Rule**: Counts `c_ast.Return` statements whose return expression (`node.expr`) references at least one tainted variable.
+- **Node Types**: `Return` with tainted variables in return expression.
+
+---
+
+### `num_tainted_globals`
+- **Measured On**: Miter C file
+- **Counting Rule**: Counts unique base global variables (stripping `_1`/`_2` suffixes) that become tainted during taint propagation.
+- **Node Types**: Global `Decl` nodes in the miter whose base name is in the tainted variable set.
+
+
+
+---
+
+### `max_taint_depth`
+- **Measured On**: Miter C file & Taint Propagation Graph
+- **Counting Rule**: Longest acyclic propagation chain depth from initial secret seed variables to any derived tainted variable in the dependency graph. Seed variables have depth 0; direct derivatives have depth 1, etc.
+- **Graph Structure**: Derived from assignment and binary op dependencies between variables during fixpoint iteration.
+
+---
+
+### `num_secret_bitops`
+- **Measured On**: Miter C file
+- **Counting Rule**: Counts bitwise operations (`>>`, `<<`, `&`, `|`, `^`) in AST `BinaryOp` nodes where the left or right operand evaluates a tainted variable.
+- **Node Types**: `BinaryOp` with bitwise operators operating on tainted variables.
 
 ---
 
