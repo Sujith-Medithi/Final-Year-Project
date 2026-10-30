@@ -1,0 +1,49 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_2\\miters\\R001729_miter.c",
+  "actual_mqil_leakage": 3,
+  "actual_mqil_assertions_total": 159,
+  "mqil_leak_ratio": 0.0189,
+  "leakage_result": "FAILED",
+  "safety_failures": [
+    "main.overflow.1",
+    "main.overflow.2",
+    "main.overflow.3",
+    "main.overflow.4",
+    "main.overflow.5",
+    "main.overflow.6",
+    "main.overflow.7",
+    "main.overflow.8",
+    "main.overflow.9",
+    "main.overflow.10",
+    "main.overflow.11",
+    "main.overflow.12",
+    "main.overflow.13",
+    "main.overflow.14",
+    "main.overflow.15",
+    "main.overflow.16"
+  ],
+  "safety_result": "FAILED",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "FAILED",
+  "dataset_status": "INVALID_UNSAFE_PROGRAM",
+  "cbmc_exit_code": 10,
+  "failed_details": [
+    {
+      "property": "main.assertion.1",
+      "assertion": "g_out_1 == g_out_2"
+    },
+    {
+      "property": "main.assertion.3",
+      "assertion": "out_sink_1 == out_sink_2"
+    },
+    {
+      "property": "main.assertion.101",
+      "assertion": "s_idx_1 == s_idx_2"
+    }
+  ],
+  "error": null,
+  "cbmc_verified": true,
+  "cbmc_status": "FAILED",
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_2/miters/R001729_miter.c --unwind 5 --unwinding-assertions",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_2\\miters\\R001729_miter.c.cbmc.log"
+}

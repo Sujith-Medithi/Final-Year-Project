@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "sec_score",
+    "pub_flag"
+  ],
+  "high_vars": [
+    "sec_score"
+  ],
+  "low_vars": [
+    "pub_flag"
+  ]
+}

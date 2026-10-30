@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "sec_val",
+    "pub_scale"
+  ],
+  "high_vars": [
+    "sec_val"
+  ],
+  "low_vars": [
+    "pub_scale"
+  ]
+}

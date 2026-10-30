@@ -1,0 +1,14 @@
+{
+  "input_vars": [
+    "sec_key1",
+    "sec_key2",
+    "pub_nonce"
+  ],
+  "high_vars": [
+    "sec_key1",
+    "sec_key2"
+  ],
+  "low_vars": [
+    "pub_nonce"
+  ]
+}

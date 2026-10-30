@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "sec_data",
+    "pub_seed"
+  ],
+  "high_vars": [
+    "sec_data"
+  ],
+  "low_vars": [
+    "pub_seed"
+  ]
+}
