@@ -435,8 +435,16 @@ def extract_group_b_features(
     with open(input_json_path, "r", encoding="utf-8") as f:
         meta = json.load(f)
 
-    input_vars = set(meta.get("input_vars", []))
     high_vars = set(meta.get("high_vars", []))
+    input_vars = set(meta.get("input_vars", []))
+
+    invalid_high_vars = high_vars - input_vars
+    if invalid_high_vars:
+        raise ValueError(
+            "high_vars must be a subset of input_vars; "
+            f"invalid entries: {sorted(invalid_high_vars)}"
+        )
+
     low_vars = set(meta.get("low_vars", [v for v in input_vars if v not in high_vars]))
 
     # Phase 1: Validate miter strictly (loud failures, no silent fallback)
@@ -476,11 +484,12 @@ def extract_group_b_features(
     for p_list in func_param_map.values():
         formal_params.update(p_list)
 
-    # 2. Initialize seeds: suffixed copies of high_vars (C2, D1)
+    # 2. Initialize seeds: suffixed copies of high_vars (C2, D1) as well as unsuffixed globals
     seeds: Set[str] = set()
     for hv in high_vars:
         seeds.add(f"{hv}_1")
         seeds.add(f"{hv}_2")
+        seeds.add(hv)
 
     tainted_vars: Set[str] = set(seeds)
     dep_graph: Dict[str, Set[str]] = {}
@@ -582,11 +591,23 @@ def extract_group_b_features(
             rhs_ids = extract_ids(node.rvalue)
             is_compound = node.op != '='
             lhs_ids = extract_ids(node.lvalue) if is_compound else set()
-            if any(v in tainted_vars for v in rhs_ids) or any(v in tainted_vars for v in lhs_ids):
+            base = get_lvalue_base(node.lvalue)
+
+            is_explicit = any(v in tainted_vars for v in rhs_ids) or any(v in tainted_vars for v in lhs_ids)
+            if not is_explicit and isinstance(node.rvalue, c_ast.FuncCall):
+                called_fn = node.rvalue.name.name if isinstance(node.rvalue.name, c_ast.ID) else None
+                if called_fn and called_fn in func_returns:
+                    for ret_expr in func_returns[called_fn]:
+                        ret_ids = extract_ids(ret_expr)
+                        if any(v in tainted_vars for v in ret_ids):
+                            is_explicit = True
+                            break
+
+            if is_explicit and base not in seeds:
                 num_explicit_flows += 1
-                base = get_lvalue_base(node.lvalue)
-                if base and base not in seeds and base not in formal_params:
+                if base and base not in formal_params:
                     clean_vars_tainted.add(base)
+
             if node.op in BITWISE_ASSIGN_OPS and (any(v in tainted_vars for v in lhs_ids) or any(v in tainted_vars for v in rhs_ids)):
                 num_secret_bitops += 1
             self.generic_visit(node)
@@ -595,9 +616,19 @@ def extract_group_b_features(
             nonlocal num_explicit_flows
             if node.init:
                 rhs_ids = extract_ids(node.init)
-                if any(v in tainted_vars for v in rhs_ids):
+                is_explicit = any(v in tainted_vars for v in rhs_ids)
+                if not is_explicit and isinstance(node.init, c_ast.FuncCall):
+                    called_fn = node.init.name.name if isinstance(node.init.name, c_ast.ID) else None
+                    if called_fn and called_fn in func_returns:
+                        for ret_expr in func_returns[called_fn]:
+                            ret_ids = extract_ids(ret_expr)
+                            if any(v in tainted_vars for v in ret_ids):
+                                is_explicit = True
+                                break
+
+                if is_explicit and node.name not in seeds:
                     num_explicit_flows += 1
-                    if node.name and node.name not in seeds and node.name not in formal_params:
+                    if node.name and node.name not in formal_params:
                         clean_vars_tainted.add(node.name)
             self.generic_visit(node)
 
@@ -732,8 +763,22 @@ def extract_group_b_features(
     max_taint_depth = max([get_depth(v, {v}) for v in non_seed_tainted]) if non_seed_tainted else 0
 
     # 6. Global variables tainted
-    tainted_miter_globals = {g for g in miter_global_vars if g in tainted_vars}
-    unique_base_globals = {re.sub(r'_[12]$', '', g) for g in tainted_miter_globals}
+    seed_base_names = {
+        re.sub(r'_[12]$', '', seed)
+        for seed in seeds
+    }
+
+    tainted_miter_globals = {
+        g for g in miter_global_vars
+        if g in tainted_vars
+        and re.sub(r'_[12]$', '', g) not in seed_base_names
+    }
+
+    unique_base_globals = {
+        re.sub(r'_[12]$', '', g)
+        for g in tainted_miter_globals
+    }
+
     num_tainted_globals = len(unique_base_globals)
 
     # 7. Internal miter-side counters for D2 ratios

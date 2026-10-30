@@ -242,7 +242,7 @@ def generate_random_c_program(
     prog_id: str,
     family: str,
     seed: int,
-    target_loc: int = 550
+    target_loc: int = 1050
 ) -> Tuple[str, Dict[str, Any]]:
     """
     Generates a complete C program source text and companion security config.
@@ -269,7 +269,6 @@ def generate_random_c_program(
     lines.append("#include <stdlib.h>")
     lines.append("#include <stdbool.h>")
     lines.append("#include <string.h>")
-    lines.append("#include <assert.h>")
     lines.append("")
 
     # Top-level structs & unions
@@ -325,7 +324,7 @@ def generate_random_c_program(
     block_idx = 0
     while True:
         current_loc = len(lines) + 30
-        if current_loc >= max(505, target_loc):
+        if current_loc >= target_loc:
             break
 
         b_var = f"blk_{block_idx}"
@@ -397,7 +396,8 @@ def process_single_random_program(
     dest_dir: Path,
     seen_hashes: set,
     lock: threading.Lock,
-    regeneration_log: List[Dict[str, Any]]
+    regeneration_log: List[Dict[str, Any]],
+    min_loc: int = 1000
 ) -> Dict[str, Any]:
     """
     Generates, validates, miters, verifies with CBMC, and extracts features for a single program.
@@ -408,6 +408,39 @@ def process_single_random_program(
     dest_miters = dest_dir / "miters"
     dest_cbmc = dest_dir / "cbmc"
     dest_features = dest_dir / "features"
+
+    c_path = dest_programs / f"{prog_id}.c"
+    cfg_path = dest_configs / f"{prog_id}.json"
+    miter_path = dest_miters / f"{prog_id}_miter.c"
+    cbmc_json_path = dest_cbmc / f"{prog_id}.json"
+    feat_json_path = dest_features / f"{prog_id}.json"
+
+    # Resume support: check if already successfully generated and verified
+    if c_path.exists() and cfg_path.exists() and miter_path.exists() and cbmc_json_path.exists() and feat_json_path.exists():
+        try:
+            source_code = c_path.read_text(encoding="utf-8")
+            loc = len(source_code.splitlines())
+            if loc >= min_loc:
+                sha256 = hashlib.sha256(source_code.encode("utf-8")).hexdigest()
+                with open(cbmc_json_path, "r", encoding="utf-8") as f:
+                    cbmc_res = json.load(f)
+                with open(feat_json_path, "r", encoding="utf-8") as f:
+                    features = json.load(f)
+                if cbmc_res.get("cbmc_verified"):
+                    with lock:
+                        seen_hashes.add(sha256)
+                    return {
+                        "program_id": prog_id,
+                        "family_id": family_id,
+                        "source_file": str(c_path.relative_to(dest_dir.parent.parent)),
+                        "generator_seed": initial_seed,
+                        "loc": loc,
+                        "sha256": sha256,
+                        "cbmc_res": cbmc_res,
+                        "features": features
+                    }
+        except Exception:
+            pass
 
     current_seed = initial_seed
     attempts = 0
@@ -422,12 +455,12 @@ def process_single_random_program(
         )
 
         loc = len(source_code.splitlines())
-        if loc < 500:
+        if loc < min_loc:
             with lock:
                 regeneration_log.append({
                     "program_id": prog_id,
                     "seed": current_seed,
-                    "reason": f"LOC {loc} < 500"
+                    "reason": f"LOC {loc} < {min_loc}"
                 })
             current_seed += 1000
             continue
@@ -480,6 +513,17 @@ def process_single_random_program(
             current_seed += 1000
             continue
 
+        if not cbmc_res.get("cbmc_verified"):
+            with lock:
+                seen_hashes.remove(sha256)
+                regeneration_log.append({
+                    "program_id": prog_id,
+                    "seed": current_seed,
+                    "reason": f"CBMC unverified: {cbmc_res.get('dataset_status', 'UNKNOWN')}"
+                })
+            current_seed += 1000
+            continue
+
         # 3. Extract all 29 ML features in memory (no AST saved to disk)
         try:
             features = extract_all_mqil_features(c_path, cfg_path, miter_path)
@@ -514,16 +558,51 @@ def process_single_random_program(
             "features": features
         }
 
+def _save_dataset_csv(dest_dir: Path, results: List[Dict[str, Any]]) -> None:
+    """Writes or updates random_dataset.csv."""
+    csv_path = dest_dir / "random_dataset.csv"
+    csv_columns = [
+        "program_id", "family_id", "source_file", "generator_seed"
+    ] + FEATURE_COLS + [
+        "actual_mqil_leakage", "actual_mqil_assertions_total", "mqil_leak_ratio",
+        "cbmc_verified", "cbmc_exit_code", "cbmc_status"
+    ]
+
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(csv_columns)
+        for r in results:
+            cbmc = r["cbmc_res"]
+            feats = r["features"]
+            row = [
+                r["program_id"],
+                r["family_id"],
+                r["source_file"],
+                r["generator_seed"]
+            ]
+            for col in FEATURE_COLS:
+                row.append(feats.get(col, 0))
+            row.extend([
+                cbmc["actual_mqil_leakage"],
+                cbmc["actual_mqil_assertions_total"],
+                cbmc["mqil_leak_ratio"],
+                cbmc["cbmc_verified"],
+                cbmc["cbmc_exit_code"],
+                cbmc["cbmc_status"]
+            ])
+            writer.writerow(row)
+
 def run_random_dataset(
     dest_dir: Optional[Path] = None,
     count: int = 100,
+    min_loc: int = 1000,
     master_seed: int = 42000,
-    max_workers: int = 6
+    max_workers: int = 8
 ) -> Dict[str, Any]:
     """
-    Unified entry point to generate the 100-program random benchmark dataset.
+    Unified entry point to generate the random benchmark dataset.
     Generates programs, miters, CBMC verification, and feature extraction.
-    Exports random_dataset.csv and random_dataset_report.json into datasets/random/.
+    Exports random_dataset.csv and random_dataset_report.json into dest_dir.
     """
     if dest_dir is None:
         workspace = Path(__file__).resolve().parent.parent.parent
@@ -539,17 +618,27 @@ def run_random_dataset(
     for d in [dest_programs, dest_configs, dest_miters, dest_cbmc, dest_features]:
         d.mkdir(parents=True, exist_ok=True)
 
-    # Size tier targets to guarantee wide LOC distribution
-    # Tier 1: 520-680 (35%), Tier 2: 720-950 (35%), Tier 3: 1020-1400 (20%), Tier 4: 1520-1750 (10%)
-    tier_assignments = []
-    for _ in range(35):
-        tier_assignments.append((520, 680))
-    for _ in range(35):
-        tier_assignments.append((720, 950))
-    for _ in range(20):
-        tier_assignments.append((1020, 1400))
-    for _ in range(10):
-        tier_assignments.append((1520, 1750))
+    # Size tier targets to guarantee wide LOC distribution with loc >= min_loc
+    c1 = int(count * 0.40)
+    c2 = int(count * 0.35)
+    c3 = int(count * 0.15)
+    c4 = count - c1 - c2 - c3
+
+    t1_min = max(min_loc + 50, 1050)
+    t1_max = max(min_loc + 250, 1250)
+    t2_min = max(min_loc + 250, 1250)
+    t2_max = max(min_loc + 550, 1550)
+    t3_min = max(min_loc + 550, 1550)
+    t3_max = max(min_loc + 850, 1850)
+    t4_min = max(min_loc + 850, 1850)
+    t4_max = max(min_loc + 1200, 2200)
+
+    tier_assignments = (
+        [(t1_min, t1_max)] * c1 +
+        [(t2_min, t2_max)] * c2 +
+        [(t3_min, t3_max)] * c3 +
+        [(t4_min, t4_max)] * c4
+    )
 
     rng = random.Random(master_seed)
     rng.shuffle(tier_assignments)
@@ -563,7 +652,7 @@ def run_random_dataset(
         seed = master_seed + (i + 1) * 37
         tasks.append((prog_id, family_id, target_loc, seed))
 
-    print(f"Starting generation and processing of {count} random C programs...")
+    print(f"Starting generation and processing of {count} random C programs (min LOC >= {min_loc}, max_workers={max_workers})...", flush=True)
     seen_hashes = set()
     lock = threading.Lock()
     regeneration_log = []
@@ -573,7 +662,7 @@ def run_random_dataset(
         future_to_task = {
             executor.submit(
                 process_single_random_program,
-                pid, fam, tloc, s, dest_dir, seen_hashes, lock, regeneration_log
+                pid, fam, tloc, s, dest_dir, seen_hashes, lock, regeneration_log, min_loc
             ): pid for (pid, fam, tloc, s) in tasks
         }
 
@@ -586,17 +675,22 @@ def run_random_dataset(
                 completed += 1
                 cbmc = res["cbmc_res"]
                 print(f"[{completed}/{count}] Completed {pid}: LOC={res['loc']} | "
-                      f"leak={cbmc['actual_mqil_leakage']}/{cbmc['actual_mqil_assertions_total']} | "
-                      f"family={res['family_id']}")
+                      f"leak={cbmc.get('actual_mqil_leakage')}/{cbmc.get('actual_mqil_assertions_total')} | "
+                      f"status={cbmc.get('dataset_status')} | "
+                      f"family={res['family_id']}", flush=True)
+
+                if completed % 50 == 0:
+                    _save_dataset_csv(dest_dir, sorted(results, key=lambda r: r["program_id"]))
             except Exception as exc:
-                print(f"[ERROR] Failed processing {pid}: {exc}")
+                print(f"[ERROR] Failed processing {pid}: {exc}", flush=True)
                 raise exc
 
     # Sort results by program_id
     results.sort(key=lambda r: r["program_id"])
 
-    # 1. Assemble random_dataset.csv
+    # 1. Final Assemble random_dataset.csv
     csv_path = dest_dir / "random_dataset.csv"
+    _save_dataset_csv(dest_dir, results)
     csv_columns = [
         "program_id", "family_id", "source_file", "generator_seed"
     ] + FEATURE_COLS + [

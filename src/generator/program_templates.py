@@ -23,7 +23,7 @@ STAGE1_CANONICAL_PROGRAMS: List[Dict[str, Any]] = [
         "desc": "High input multiplied by zero; only public input influences output.",
         "globals": "int glob_zero_1 = 0;",
         "helpers": "int zero_kernel_1(int s, int p) {\n    int dead = s * 0;\n    return p * 2 + 1;\n}",
-        "body": "    int out;\n    out = zero_kernel_1(high_sec, pub_val);\n    glob_zero_1 = out;",
+        "body": "    __CPROVER_assume(pub_val >= -1000000 && pub_val <= 1000000);\n    int out;\n    out = zero_kernel_1(high_sec, pub_val);\n    glob_zero_1 = out;",
         "input_vars": ["high_sec", "pub_val"],
         "high_vars": ["high_sec"],
         "low_vars": ["pub_val"]

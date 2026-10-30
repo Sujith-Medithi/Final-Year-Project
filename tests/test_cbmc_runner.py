@@ -76,10 +76,10 @@ PARSING ERROR
             miter_path = Path(f.name)
         
         try:
-            with pytest.raises(RuntimeError) as exc_info:
-                run_cbmc_verification(miter_path)
-            assert "exit code 6" in str(exc_info.value)
-            assert "PARSING ERROR" in str(exc_info.value)
+            res = run_cbmc_verification(miter_path)
+            assert res["dataset_status"] == "INVALID"
+            assert res["cbmc_exit_code"] == 6
+            assert "PARSING ERROR" in res["error"]
         finally:
             miter_path.unlink(missing_ok=True)
 
@@ -95,9 +95,9 @@ CBMC version 6.6.0 (cbmc-6.6.0)
             miter_path = Path(f.name)
         
         try:
-            with pytest.raises(RuntimeError) as exc_info:
-                run_cbmc_verification(miter_path)
-            assert "lacks a verification result line" in str(exc_info.value)
+            res = run_cbmc_verification(miter_path)
+            assert res["dataset_status"] == "INVALID"
+            assert res["cbmc_verified"] is False
         finally:
             miter_path.unlink(missing_ok=True)
 
@@ -113,9 +113,9 @@ VERIFICATION SUCCESSFUL
             miter_path = Path(f.name)
         
         try:
-            with pytest.raises(RuntimeError) as exc_info:
-                run_cbmc_verification(miter_path)
-            assert "parsed 0 assertions" in str(exc_info.value)
+            res = run_cbmc_verification(miter_path)
+            assert res["dataset_status"] == "INVALID"
+            assert res["actual_mqil_assertions_total"] == 0
         finally:
             miter_path.unlink(missing_ok=True)
 
@@ -126,9 +126,10 @@ def test_cbmc_runner_mocked_timeout():
             miter_path = Path(f.name)
         
         try:
-            with pytest.raises(TimeoutError) as exc_info:
-                run_cbmc_verification(miter_path, timeout=5)
-            assert "timed out" in str(exc_info.value)
+            res = run_cbmc_verification(miter_path, timeout=5)
+            assert res["dataset_status"] == "INVALID"
+            assert res["overall_cbmc_status"] == "TIMEOUT"
+            assert res["actual_mqil_leakage"] is None
         finally:
             miter_path.unlink(missing_ok=True)
 
@@ -138,9 +139,9 @@ def test_cbmc_runner_real_broken_c_raises():
         miter_path = Path(f.name)
 
     try:
-        with pytest.raises(RuntimeError) as exc_info:
-            run_cbmc_verification(miter_path)
-        assert "exit code" in str(exc_info.value)
+        res = run_cbmc_verification(miter_path)
+        assert res["dataset_status"] == "INVALID"
+        assert res["cbmc_verified"] is False
     finally:
         miter_path.unlink(missing_ok=True)
 

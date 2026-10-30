@@ -72,7 +72,8 @@ def run_stage1_smoke() -> pd.DataFrame:
             "low_inputs": ",".join(item["low_vars"]),
             **feats,
             "actual_mqil_leakage": leak_count,
-            "actual_mqil_assertions_total": total_asserts
+            "actual_mqil_assertions_total": total_asserts,
+            "dataset_status": cbmc_res["dataset_status"]
         })
 
     df = pd.DataFrame(records)
@@ -111,6 +112,7 @@ def create_family_grouped_splits(df: pd.DataFrame) -> Dict[str, Any]:
     2. Every label value present in val/test is also present in train (Gate G7).
     3. No family, program, or sha256 appears in multiple splits (Gate G5).
     4. Frozen split JSON keys: train_indices, val_indices, test_indices.
+    5. Non-VALID or unsafe programs are never treated as normal training samples.
     """
     train_fams = [
         "zero_leakage",
@@ -128,9 +130,11 @@ def create_family_grouped_splits(df: pd.DataFrame) -> Dict[str, Any]:
     assigned = sorted(train_fams + val_fams + test_fams)
     assert assigned == all_fams, f"Family mismatch: {assigned} vs {all_fams}"
 
-    train_idx = df[df["family_id"].isin(train_fams)].index.tolist()
-    val_idx = df[df["family_id"].isin(val_fams)].index.tolist()
-    test_idx = df[df["family_id"].isin(test_fams)].index.tolist()
+    valid_mask = df["dataset_status"].isin(["VALID", "LEAKAGE_DETECTED"]) if "dataset_status" in df.columns else pd.Series(True, index=df.index)
+
+    train_idx = df[df["family_id"].isin(train_fams) & valid_mask].index.tolist()
+    val_idx = df[df["family_id"].isin(val_fams) & valid_mask].index.tolist()
+    test_idx = df[df["family_id"].isin(test_fams) & valid_mask].index.tolist()
 
     assert set(train_idx).isdisjoint(set(val_idx)), "Overlap between train and val"
     assert set(train_idx).isdisjoint(set(test_idx)), "Overlap between train and test"
@@ -195,7 +199,8 @@ def run_stage2_pipeline(count_per_family: int = 5) -> pd.DataFrame:
             "sha256": item["sha256"],
             **feats,
             "actual_mqil_leakage": leak_count,
-            "actual_mqil_assertions_total": total_asserts
+            "actual_mqil_assertions_total": total_asserts,
+            "dataset_status": cbmc_res.get("dataset_status", "VALID")
         })
         print(f"Processed [{pid}] {item['family_id']}: #leak={leak_count}/{total_asserts} (LOC={feats['loc']})")
 
@@ -300,7 +305,8 @@ def run_stage2_scaled(count_per_family: int = 10) -> pd.DataFrame:
             "low_inputs": ",".join(item["low_vars"]),
             **feats,
             "actual_mqil_leakage": leak_count,
-            "actual_mqil_assertions_total": total_asserts
+            "actual_mqil_assertions_total": total_asserts,
+            "dataset_status": cbmc_res.get("dataset_status", "VALID")
         })
         print(f"Processed [{pid}] {item['family_id']}: #leak={leak_count}/{total_asserts}")
 

@@ -43,4 +43,9 @@ def generate_miter_program(source_c_path: Path, input_json_path: Path, output_mi
     if not output_miter_path.exists():
         raise FileNotFoundError(f"Expected generated miter at {output_miter_path}, but file was not found.")
         
+    miter_content = output_miter_path.read_text(encoding="utf-8")
+    if "#include <assert.h>" not in miter_content:
+        output_miter_path.write_text("#include <assert.h>\n" + miter_content, encoding="utf-8")
+
     return output_miter_path
+

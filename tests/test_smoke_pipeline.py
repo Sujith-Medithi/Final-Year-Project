@@ -12,7 +12,10 @@ import json
 import pandas as pd
 import pytest
 
+import sys
 WORKSPACE = Path(__file__).resolve().parent.parent
+if str(WORKSPACE) not in sys.path:
+    sys.path.insert(0, str(WORKSPACE))
 DATASETS_DIR = WORKSPACE / "datasets"
 RESULTS_DIR = WORKSPACE / "results"
 
@@ -85,8 +88,301 @@ def test_deliverables_exist():
     # Trained model
     assert (RESULTS_DIR / "models" / "best_model.pkl").exists()
 
+from src.core.cbmc_runner import parse_cbmc_output
+
+def test_cbmc_parser_successful_zero_leakage():
+    """Test 1: Successful zero-leakage result."""
+    cbmc_output = """
+[main.assertion.1] line 75 assertion glob_zero_1_1 == glob_zero_1_2: SUCCESS
+[main.assertion.2] line 76 assertion out_1 == out_2: SUCCESS
+[zero_kernel_1.overflow.1] line 55 arithmetic overflow on signed * in p * 2: SUCCESS
+[zero_kernel_1.overflow.2] line 55 arithmetic overflow on signed + in p * 2 + 1: SUCCESS
+[zero_kernel_1_2.assertion.1] line 49 assertion dead_1 == dead_2: SUCCESS
+
+** 0 of 5 failed (1 iterations)
+VERIFICATION SUCCESSFUL
+"""
+    res = parse_cbmc_output(cbmc_output, exit_code=0, program_name="P000001_miter.c")
+    assert res["actual_mqil_assertions_total"] == 3
+    assert res["actual_mqil_leakage"] == 0
+    assert res["leakage_result"] == "SUCCESSFUL"
+    assert res["safety_result"] == "SUCCESSFUL"
+    assert res["overall_cbmc_status"] == "SUCCESSFUL"
+    assert res["dataset_status"] == "VALID"
+
+def test_cbmc_parser_leakage_detected():
+    """Test 2: Leakage but no safety failure."""
+    cbmc_output = """
+[main.assertion.1] line 41 assertion glob_direct_2_1 == glob_direct_2_2: FAILURE
+[main.assertion.2] line 42 assertion res_1 == res_2: SUCCESS
+[direct_kernel_2_2.assertion.1] line 25 assertion dead_1 == dead_2: SUCCESS
+
+** 1 of 3 failed (2 iterations)
+VERIFICATION FAILED
+"""
+    res = parse_cbmc_output(cbmc_output, exit_code=10, program_name="P000002_miter.c")
+    assert res["actual_mqil_leakage"] >= 1
+    assert res["leakage_result"] == "FAILED"
+    assert res["safety_result"] == "SUCCESSFUL"
+    assert res["overall_cbmc_status"] == "FAILED"
+    assert res["dataset_status"] == "LEAKAGE_DETECTED"
+
+def test_cbmc_parser_safety_failure():
+    """Test 3: Safety failure but no leakage."""
+    cbmc_output = """
+[main.assertion.1] line 72 assertion glob_zero_1_1 == glob_zero_1_2: SUCCESS
+[main.assertion.2] line 73 assertion out_1 == out_2: SUCCESS
+[zero_kernel_1.overflow.1] line 54 arithmetic overflow on signed * in p * 2: FAILURE
+[zero_kernel_1.overflow.2] line 54 arithmetic overflow on signed + in p * 2 + 1: SUCCESS
+[zero_kernel_1_2.assertion.1] line 48 assertion dead_1 == dead_2: SUCCESS
+
+** 1 of 5 failed (2 iterations)
+VERIFICATION FAILED
+"""
+    res = parse_cbmc_output(cbmc_output, exit_code=10, program_name="P000001_miter.c")
+    assert res["actual_mqil_leakage"] == 0
+    assert res["leakage_result"] == "SUCCESSFUL"
+    assert res["safety_result"] == "FAILED"
+    assert res["overall_cbmc_status"] == "FAILED"
+    assert res["dataset_status"] == "INVALID_UNSAFE_PROGRAM"
+
+def test_cbmc_parser_incomplete_unwinding():
+    """Test 4: Incomplete unwinding."""
+    cbmc_output = """
+[main.assertion.1] line 75 assertion out_1 == out_2: SUCCESS
+[main.assertion.2] line 76 assertion glob_1 == glob_2: SUCCESS
+[main.unwind.0] line 30 unwinding assertion loop 0: FAILURE
+
+** 1 of 3 failed (2 iterations)
+VERIFICATION FAILED
+"""
+    res = parse_cbmc_output(cbmc_output, exit_code=10, program_name="loop_miter.c")
+    assert res["actual_mqil_leakage"] is None
+    assert len(res["unwinding_failures"]) > 0
+    assert res["dataset_status"] == "INCOMPLETE_UNWINDING"
+
+def test_cbmc_parser_assertion_with_colon():
+    """Test 5: Assertion expression containing a colon."""
+    cbmc_output = """
+[main.assertion.1] line 10 assertion (x > 0 ? y : z) == v2: FAILURE
+
+** 1 of 1 failed (2 iterations)
+VERIFICATION FAILED
+"""
+    res = parse_cbmc_output(cbmc_output, exit_code=10, program_name="test_colon.c")
+    assert res["actual_mqil_assertions_total"] == 1
+    assert res["actual_mqil_leakage"] == 1
+    assert len(res["failed_details"]) == 1
+    assert res["failed_details"][0]["property"] == "main.assertion.1"
+    assert res["failed_details"][0]["assertion"] == "(x > 0 ? y : z) == v2"
+    assert res["dataset_status"] == "LEAKAGE_DETECTED"
+import tempfile
+from src.core.feature_extractor import extract_group_b_features
+from src.core.transpiler import generate_miter_program
+
+def test_feature_extractor_high_vars_validation():
+    """Test A: high_vars validation."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("int main() { return 0; }", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["pub"],
+            "high_vars": ["secret"],
+            "low_vars": ["pub"]
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        miter_file.write_text("#include <assert.h>\nint main() { return 0; }", encoding="utf-8")
+        with pytest.raises(ValueError, match="high_vars must be a subset of input_vars"):
+            extract_group_b_features(src_file, cfg_file, miter_file)
+
+def test_feature_extractor_tainted_function_return():
+    """Test B: tainted function return causes explicit flow."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("""
+int secret_global;
+int get_secret() {
+    return secret_global;
+}
+int main() {
+    int out;
+    out = get_secret();
+    return 0;
+}
+""", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["secret_global"],
+            "high_vars": ["secret_global"],
+            "low_vars": []
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        generate_miter_program(src_file, cfg_file, miter_file)
+        feats = extract_group_b_features(src_file, cfg_file, miter_file)
+        assert feats["num_explicit_flows"] >= 1
+
+def test_feature_extractor_seed_self_update_not_explicit_flow():
+    """Test C: seed self-update is not an explicit flow."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("int main() { return 0; }", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["high_sec"],
+            "high_vars": ["high_sec"],
+            "low_vars": []
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        miter_file.write_text("""
+#include <assert.h>
+int high_sec_1;
+int high_sec_2;
+void main() {
+    high_sec_1 = high_sec_1 + 1;
+    assert(high_sec_1 == high_sec_2);
+}
+""", encoding="utf-8")
+        feats = extract_group_b_features(src_file, cfg_file, miter_file)
+        assert feats["num_explicit_flows"] == 0
+
+def test_feature_extractor_tainted_global_counted():
+    """Test D: tainted global is counted."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("""
+int high_sec;
+int global_out;
+int main() {
+    global_out = high_sec;
+    return 0;
+}
+""", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["high_sec"],
+            "high_vars": ["high_sec"],
+            "low_vars": []
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        generate_miter_program(src_file, cfg_file, miter_file)
+        feats = extract_group_b_features(src_file, cfg_file, miter_file)
+        assert feats["num_tainted_globals"] == 1
+
+def test_feature_extractor_secret_global_not_counted():
+    """Test E: secret global itself is not counted in num_tainted_globals."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("""
+int high_sec;
+int main() {
+    high_sec = high_sec + 1;
+    return 0;
+}
+""", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["high_sec"],
+            "high_vars": ["high_sec"],
+            "low_vars": []
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        generate_miter_program(src_file, cfg_file, miter_file)
+        feats = extract_group_b_features(src_file, cfg_file, miter_file)
+        assert feats["num_tainted_globals"] == 0
+
+def test_feature_extractor_unchanged_features_regression():
+    """Test F: regression checks for unchanged features."""
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td)
+        src_file = tpath / "src.c"
+        src_file.write_text("int main() { return 0; }", encoding="utf-8")
+        cfg_file = tpath / "cfg.json"
+        cfg_file.write_text(json.dumps({
+            "input_vars": ["s"],
+            "high_vars": ["s"],
+            "low_vars": []
+        }), encoding="utf-8")
+        miter_file = tpath / "miter.c"
+        miter_file.write_text("""
+#include <assert.h>
+typedef void FILE;
+int printf(const char *format, ...);
+int puts(const char *str);
+int putchar(int c);
+int fprintf(FILE *stream, const char *format, ...);
+int sprintf(char *str, const char *format, ...);
+int snprintf(char *str, unsigned int size, const char *format, ...);
+int s_1;
+int s_2;
+void main() {
+    int x_1 = 0;
+    int x_2 = 0;
+    char buf[32];
+    FILE *fp = 0;
+
+    // 1. culprit blocks: if, while, do-while, for, switch (5 blocks)
+    if (s_1 > 0) { x_1 = 1; }
+    while (s_1 < 10) { x_1 = 2; break; }
+    do { x_1 = 3; break; } while (s_1 < 5);
+    for (int i = 0; s_1 < 20; i++) { break; }
+    switch (s_1) { case 0: break; }
+
+    // Ternary operator should NOT be counted as culprit block
+    int y_1 = (s_1 > 0) ? 10 : 20;
+
+    // 2. Secret dependent prints: 6 calls with tainted argument, 1 untainted puts
+    printf("val: %d", s_1);
+    puts("clean string");
+    putchar(s_1);
+    fprintf(fp, "err: %d", s_1);
+    sprintf(buf, "%d", s_1);
+    snprintf(buf, 32, "%d", s_1);
+
+    // 3. Secret bitops: binary (&, |, ^, <<, >>) and compound (&=, |=, ^=, <<=, >>=)
+    int b1 = s_1 & 1;
+    int b2 = s_1 | 2;
+    int b3 = s_1 ^ 3;
+    int b4 = s_1 << 1;
+    int b5 = s_1 >> 1;
+    x_1 &= s_1;
+    x_1 |= s_1;
+    x_1 ^= s_1;
+    x_1 <<= 1;
+    x_1 >>= 1;
+
+    // 4. Assertions: 2 assert calls
+    assert(x_1 == x_2);
+    assert(y_1 == y_1);
+}
+""", encoding="utf-8")
+        feats = extract_group_b_features(src_file, cfg_file, miter_file)
+        assert feats["num_culprit_blocks"] == 5, f"Expected 5 culprit blocks, got {feats['num_culprit_blocks']}"
+        assert feats["num_assertions"] == 2, f"Expected 2 assertions, got {feats['num_assertions']}"
+        assert feats["num_secret_dependent_prints"] == 5, f"Expected 5 secret prints, got {feats['num_secret_dependent_prints']}"
+        assert feats["num_secret_bitops"] == 10, f"Expected 10 secret bitops, got {feats['num_secret_bitops']}"
+
 if __name__ == "__main__":
     test_stage1_dataset_invariants()
     test_stage2_pipeline_invariants()
     test_deliverables_exist()
+    test_cbmc_parser_successful_zero_leakage()
+    test_cbmc_parser_leakage_detected()
+    test_cbmc_parser_safety_failure()
+    test_cbmc_parser_incomplete_unwinding()
+    test_cbmc_parser_assertion_with_colon()
+    test_feature_extractor_high_vars_validation()
+    test_feature_extractor_tainted_function_return()
+    test_feature_extractor_seed_self_update_not_explicit_flow()
+    test_feature_extractor_tainted_global_counted()
+    test_feature_extractor_secret_global_not_counted()
+    test_feature_extractor_unchanged_features_regression()
     print("ALL TESTS PASSED SUCCESSFULLY.")
+
+
+
