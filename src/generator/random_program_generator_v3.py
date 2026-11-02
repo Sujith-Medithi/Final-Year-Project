@@ -483,12 +483,13 @@ def process_single_v3_program(
     seen_hashes: set,
     lock: threading.Lock,
     regeneration_log: List[Dict[str, Any]],
+    seen_features: Optional[set] = None,
     min_loc: int = 2000,
     max_loc: int = 2500
 ) -> Dict[str, Any]:
     """
     Generates, miters, verifies with CBMC, and extracts features for a single V3 benchmark.
-    Guarantees 2000 <= LOC <= 2500 and distinct SHA-256.
+    Guarantees 2000 <= LOC <= 2500, distinct SHA-256, and unique feature vector.
     """
     dest_programs = dest_dir / "programs"
     dest_configs = dest_dir / "configs"
@@ -595,6 +596,20 @@ def process_single_v3_program(
             current_seed += 1000
             continue
 
+        feat_vector = tuple(float(features.get(col, 0)) for col in FEATURE_COLS)
+        if seen_features is not None:
+            with lock:
+                if feat_vector in seen_features:
+                    seen_hashes.remove(sha256)
+                    regeneration_log.append({
+                        "program_id": prog_id,
+                        "seed": current_seed,
+                        "reason": "Feature vector collision"
+                    })
+                    current_seed += 1000
+                    continue
+                seen_features.add(feat_vector)
+
         # 4. Save per-program CBMC and Feature JSONs
         with open(cbmc_json_path, "w", encoding="utf-8") as f:
             json.dump(cbmc_res, f, indent=2)
@@ -614,7 +629,7 @@ def process_single_v3_program(
         }
 
 def _save_dataset_csv_v3(dest_dir: Path, results: List[Dict[str, Any]]) -> None:
-    """Writes random_dataset.csv for random_3."""
+    """Writes or appends to random_dataset.csv for random_3."""
     csv_path = dest_dir / "random_dataset.csv"
     csv_columns = [
         "program_id", "family_id", "source_file", "generator_seed"
@@ -623,38 +638,52 @@ def _save_dataset_csv_v3(dest_dir: Path, results: List[Dict[str, Any]]) -> None:
         "cbmc_verified"
     ]
 
+    all_rows = {}
+    if csv_path.exists():
+        with open(csv_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                all_rows[row["program_id"]] = [row.get(col, "") for col in csv_columns]
+
+    for r in results:
+        cbmc = r["cbmc_res"]
+        feats = r["features"]
+        row = [
+            r["program_id"],
+            r["family_id"],
+            r["source_file"],
+            r["generator_seed"]
+        ]
+        for col in FEATURE_COLS:
+            row.append(feats.get(col, 0))
+        row.extend([
+            cbmc["actual_mqil_leakage"],
+            cbmc["actual_mqil_assertions_total"],
+            cbmc["mqil_leak_ratio"],
+            cbmc["cbmc_verified"]
+        ])
+        all_rows[r["program_id"]] = row
+
+    sorted_pids = sorted(all_rows.keys(), key=lambda p: int(p[1:]) if p[1:].isdigit() else p)
+
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(csv_columns)
-        for r in results:
-            cbmc = r["cbmc_res"]
-            feats = r["features"]
-            row = [
-                r["program_id"],
-                r["family_id"],
-                r["source_file"],
-                r["generator_seed"]
-            ]
-            for col in FEATURE_COLS:
-                row.append(feats.get(col, 0))
-            row.extend([
-                cbmc["actual_mqil_leakage"],
-                cbmc["actual_mqil_assertions_total"],
-                cbmc["mqil_leak_ratio"],
-                cbmc["cbmc_verified"]
-            ])
-            writer.writerow(row)
+        for pid in sorted_pids:
+            writer.writerow(all_rows[pid])
 
 def run_random_3_dataset(
     dest_dir: Optional[Path] = None,
     count: int = 100,
+    start_idx: Optional[int] = None,
     min_loc: int = 2000,
     max_loc: int = 2500,
-    master_seed: int = 99000,
+    master_seed: int = 199000,
     max_workers: int = 8
 ) -> Dict[str, Any]:
     """
-    Entry point to generate random_3 dataset (100 programs, 2000 <= LOC <= 2500).
+    Entry point to generate random_3 dataset (2000 <= LOC <= 2500).
+    Can append to existing dataset automatically.
     """
     if dest_dir is None:
         workspace = Path(__file__).resolve().parent.parent.parent
@@ -669,15 +698,42 @@ def run_random_3_dataset(
     for d in [dest_programs, dest_configs, dest_miters, dest_cbmc, dest_features]:
         d.mkdir(parents=True, exist_ok=True)
 
-    # Pre-populate seen_hashes with all programs from random and random_2
+    # Determine start_idx if None
+    if start_idx is None:
+        existing_c = list(dest_programs.glob("R*.c"))
+        if existing_c:
+            existing_nums = [int(p.stem[1:]) for p in existing_c if p.stem[1:].isdigit()]
+            start_idx = max(existing_nums) if existing_nums else 0
+        else:
+            start_idx = 0
+
+    print(f"Starting generation from program index {start_idx + 1} (R{start_idx + 1:06d})...")
+
+    # Pre-populate seen_hashes with all programs from random, random_2, and random_3
     workspace = dest_dir.parent.parent
-    seen_hashes = set()
-    for prev_dir in [workspace / "datasets" / "random" / "programs", workspace / "datasets" / "random_2" / "programs"]:
+    c_files_to_hash = []
+    for prev_dir in [
+        workspace / "datasets" / "random" / "programs",
+        workspace / "datasets" / "random_2" / "programs",
+        workspace / "datasets" / "random_3" / "programs"
+    ]:
         if prev_dir.exists():
-            for p in prev_dir.glob("*.c"):
-                h = hashlib.sha256(p.read_bytes()).hexdigest()
-                seen_hashes.add(h)
-    print(f"Pre-loaded {len(seen_hashes)} existing hashes from previous random and random_2 datasets.")
+            c_files_to_hash.extend(list(prev_dir.glob("*.c")))
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:
+        seen_hashes = set(pool.map(lambda p: hashlib.sha256(p.read_bytes()).hexdigest(), c_files_to_hash))
+    print(f"Pre-loaded {len(seen_hashes)} existing hashes across random, random_2, and random_3.")
+
+    # Pre-populate seen_features from existing random_dataset.csv
+    seen_features = set()
+    csv_path = dest_dir / "random_dataset.csv"
+    if csv_path.exists():
+        with open(csv_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                feat_tuple = tuple(float(row.get(col, 0)) for col in FEATURE_COLS)
+                seen_features.add(feat_tuple)
+    print(f"Pre-loaded {len(seen_features)} existing feature vectors.")
 
     # Assign families evenly: 10 programs per family
     family_distribution = []
@@ -694,10 +750,11 @@ def run_random_3_dataset(
     results = [None] * count
     t0 = time.time()
 
-    def worker_task(idx: int) -> Tuple[int, Dict[str, Any]]:
-        prog_id = f"R{idx + 1:06d}"
-        family_id = family_distribution[idx]
-        initial_seed = master_seed + idx * 100 + 7
+    def worker_task(i: int) -> Tuple[int, Dict[str, Any]]:
+        prog_num = start_idx + i + 1
+        prog_id = f"R{prog_num:06d}"
+        family_id = family_distribution[i]
+        initial_seed = master_seed + prog_num * 100 + 7
         res = process_single_v3_program(
             prog_id=prog_id,
             family_id=family_id,
@@ -706,60 +763,62 @@ def run_random_3_dataset(
             seen_hashes=seen_hashes,
             lock=lock,
             regeneration_log=regeneration_log,
+            seen_features=seen_features,
             min_loc=min_loc,
             max_loc=max_loc
         )
-        return idx, res
+        return i, res
 
     completed_count = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(worker_task, i): i for i in range(count)}
         for future in concurrent.futures.as_completed(futures):
-            idx, res = future.result()
-            results[idx] = res
+            i, res = future.result()
+            results[i] = res
             completed_count += 1
             elapsed = time.time() - t0
             rate = completed_count / elapsed if elapsed > 0 else 0
             eta = (count - completed_count) / rate if rate > 0 else 0
             print(f"[{completed_count:3d}/{count:3d}] {completed_count*100/count:5.1f}% | LOC={res['loc']:4d} | "
-                  f"Family={res['family_id']:<23s} | Rate={rate:4.1f}/s | ETA={eta:3.0f}s")
+                  f"ID={res['program_id']} | Family={res['family_id']:<23s} | Rate={rate:4.1f}/s | ETA={eta:3.0f}s")
 
     t1 = time.time()
     total_time = t1 - t0
 
-    # Save random_dataset.csv
+    # Save random_dataset.csv (combining existing + new)
     _save_dataset_csv_v3(dest_dir, results)
     print(f"Saved dataset CSV to {dest_dir / 'random_dataset.csv'}")
 
-    # Metrics summary
-    locs = [r["loc"] for r in results]
-    min_loc_actual = min(locs)
-    max_loc_actual = max(locs)
-    avg_loc = sum(locs) / len(locs)
+    # Metrics summary across ALL rows in the updated random_dataset.csv
+    with open(csv_path, "r", encoding="utf-8") as f:
+        all_csv_records = list(csv.DictReader(f))
+
+    locs = [int(float(r["loc"])) for r in all_csv_records if "loc" in r]
+    min_loc_actual = min(locs) if locs else 0
+    max_loc_actual = max(locs) if locs else 0
+    avg_loc = sum(locs) / len(locs) if locs else 0
+
+    from collections import Counter
+    fam_counts = dict(Counter(r["family_id"] for r in all_csv_records))
 
     status_dist = {}
-    leakage_dist = {}
-    exit_code_dist = {}
-    for r in results:
-        stat = r["cbmc_res"].get("dataset_status", "UNKNOWN")
-        status_dist[stat] = status_dist.get(stat, 0) + 1
-        lr = r["cbmc_res"].get("leakage_result", "UNKNOWN")
-        leakage_dist[lr] = leakage_dist.get(lr, 0) + 1
-        ec = r["cbmc_res"].get("cbmc_exit_code", -999)
-        exit_code_dist[ec] = exit_code_dist.get(ec, 0) + 1
+    for r in all_csv_records:
+        leak = int(r.get("actual_mqil_leakage", 0))
+        st = "VALID" if leak == 0 else "LEAKAGE_DETECTED"
+        status_dist[st] = status_dist.get(st, 0) + 1
 
     report = {
         "dataset_name": "random_3",
-        "total_programs": count,
+        "total_programs": len(all_csv_records),
         "min_loc_target": min_loc,
         "max_loc_target": max_loc,
         "min_loc_actual": min_loc_actual,
         "max_loc_actual": max_loc_actual,
         "avg_loc": round(avg_loc, 2),
+        "family_distribution": fam_counts,
         "dataset_status_distribution": status_dist,
-        "cbmc_exit_code_distribution": exit_code_dist,
-        "leakage_result_distribution": leakage_dist,
-        "regenerations_count": len(regeneration_log),
+        "newly_generated_in_this_run": count,
+        "regenerations_count_in_this_run": len(regeneration_log),
         "total_execution_time_seconds": round(total_time, 2)
     }
 

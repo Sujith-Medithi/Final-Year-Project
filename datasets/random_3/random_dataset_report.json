@@ -1,23 +1,28 @@
 {
   "dataset_name": "random_3",
-  "total_programs": 100,
+  "total_programs": 200,
   "min_loc_target": 2000,
   "max_loc_target": 2500,
   "min_loc_actual": 2025,
   "max_loc_actual": 2430,
-  "avg_loc": 2221.65,
+  "avg_loc": 2223.72,
+  "family_distribution": {
+    "zero_leakage": 20,
+    "direct_leakage": 20,
+    "multi_step_explicit": 20,
+    "arithmetic_flow": 20,
+    "bitwise_flow": 20,
+    "implicit_flow": 20,
+    "nested_implicit_flow": 20,
+    "secret_dependent_loops": 20,
+    "secret_dependent_array": 20,
+    "mixed_control_data": 20
+  },
   "dataset_status_distribution": {
-    "VALID": 10,
-    "LEAKAGE_DETECTED": 90
+    "VALID": 20,
+    "LEAKAGE_DETECTED": 180
   },
-  "cbmc_exit_code_distribution": {
-    "0": 10,
-    "10": 90
-  },
-  "leakage_result_distribution": {
-    "SUCCESSFUL": 10,
-    "FAILED": 90
-  },
-  "regenerations_count": 0,
-  "total_execution_time_seconds": 184.8
+  "newly_generated_in_this_run": 100,
+  "regenerations_count_in_this_run": 0,
+  "total_execution_time_seconds": 412.82
 }

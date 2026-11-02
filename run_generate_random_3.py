@@ -21,7 +21,7 @@ if __name__ == "__main__":
         count=count,
         min_loc=2000,
         max_loc=2500,
-        master_seed=99000,
+        master_seed=299000,
         max_workers=8
     )
     t1 = time.time()
