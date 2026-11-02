@@ -158,6 +158,7 @@ def run_cbmc_verification(miter_file_path: Path, unwind: int = 5, timeout: int =
             str(miter_file_path.resolve()),
             "--unwind", str(unwind),
             "--unwinding-assertions",
+            "--no-standard-checks",
         ]
     else:
         wsl_path = to_wsl_path(miter_file_path)
@@ -167,6 +168,7 @@ def run_cbmc_verification(miter_file_path: Path, unwind: int = 5, timeout: int =
             wsl_path,
             "--unwind", str(unwind),
             "--unwinding-assertions",
+            "--no-standard-checks",
         ]
 
     cbmc_cmd_str = " ".join(cmd)

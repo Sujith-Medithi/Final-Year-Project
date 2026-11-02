@@ -15,7 +15,7 @@ htmlcov/
 # Local archives and scratch
 scratch/
 archive/
-Datasets.zip
+*.zip
 *.log
 
 
