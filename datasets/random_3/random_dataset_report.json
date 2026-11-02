@@ -1,0 +1,23 @@
+{
+  "dataset_name": "random_3",
+  "total_programs": 100,
+  "min_loc_target": 2000,
+  "max_loc_target": 2500,
+  "min_loc_actual": 2025,
+  "max_loc_actual": 2430,
+  "avg_loc": 2221.65,
+  "dataset_status_distribution": {
+    "VALID": 10,
+    "LEAKAGE_DETECTED": 90
+  },
+  "cbmc_exit_code_distribution": {
+    "0": 10,
+    "10": 90
+  },
+  "leakage_result_distribution": {
+    "SUCCESSFUL": 10,
+    "FAILED": 90
+  },
+  "regenerations_count": 0,
+  "total_execution_time_seconds": 184.8
+}
