@@ -1,0 +1,12 @@
+{
+  "input_vars": [
+    "secret_val",
+    "public_val"
+  ],
+  "high_vars": [
+    "secret_val"
+  ],
+  "low_vars": [
+    "public_val"
+  ]
+}

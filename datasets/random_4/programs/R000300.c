@@ -1,0 +1,2323 @@
+/*
+ * Benchmark Program: R000300
+ * Family: multi_step_explicit
+ * Generator Seed: 432013
+ * High Inputs: 17 | Low Inputs: 18
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+struct MatrixBlock_R000300_2013_0 {
+    unsigned char scale;
+    int dim;
+    int stride;
+    int density;
+    int determinant;
+    int trace;
+    int buffer[3];
+};
+
+struct StreamBuffer_R000300_2013_1 {
+    short state;
+    int head;
+    int watermark;
+    int buffer[3];
+};
+
+union TelemetryField_R000300_2013_0 {
+    int word;
+    unsigned char raw[4];
+    short pairs[2];
+};
+
+union ColorPixel_R000300_2013_1 {
+    int word;
+    unsigned char raw[4];
+    short pairs[2];
+};
+
+int g_out = 0;
+int g_chk = 0;
+
+int fn_R000300_2013_0(int p0, int p1, int p2, int p3, int p4) {
+    int acc = (p0 + 30) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 23;
+    int quantum_33 = (st.buffer[0] * 3 + aux) & 63;
+    if (quantum_33 > 11) {
+        acc = (acc + quantum_33 * 2 + 5) & 127;
+        aux ^= (quantum_33 & 15);
+    } else {
+        acc = (acc - quantum_33 + 11) & 127;
+        aux += 3;
+    }
+    int parity_65 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + parity_65) & 63;
+    acc ^= aux;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_1(int p0, int p1, int p2, int p3) {
+    int acc = (p0 + 8) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 26;
+    int segment_67 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + segment_67) & 63;
+    acc ^= aux;
+    int cursor_95 = (st.buffer[0] * 3 + aux) & 63;
+    if (cursor_95 > 34) {
+        acc = (acc + cursor_95 * 2 + 5) & 127;
+        aux ^= (cursor_95 & 15);
+    } else {
+        acc = (acc - cursor_95 + 11) & 127;
+        aux += 3;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_2(int p0, int p1, int p2) {
+    int acc = (p0 + 39) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 14;
+    st.buffer[1] = (st.buffer[1] + 7) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int local_arr[3] = {4, 9, 15};
+    int index_reg_97 = local_arr[aux % 3];
+    acc = (acc + index_reg_97 * 2) & 127;
+    int offset_87 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + offset_87) & 63;
+    acc ^= aux;
+    int pivot_48 = (aux + st.buffer[1]) & 3;
+    switch (pivot_48) {
+        case 0: acc = (acc + 7) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_3(int p0, int p1) {
+    int acc = (p0 + 9) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 25;
+    int quotient_91 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + quotient_91) & 63;
+    acc ^= aux;
+    int local_arr[3] = {4, 9, 15};
+    int coefficient_10 = local_arr[aux % 3];
+    acc = (acc + coefficient_10 * 2) & 127;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_4(int p0, int p1, int p2, int p3, int p4) {
+    int acc = (p0 + 34) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 17;
+    int factor_55 = (aux + st.buffer[1]) & 3;
+    switch (factor_55) {
+        case 0: acc = (acc + 3) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    st.buffer[1] = (st.buffer[1] + 9) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int window_82 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + window_82) & 63;
+    acc ^= aux;
+    int weight_68 = (st.buffer[0] * 3 + aux) & 63;
+    if (weight_68 > 38) {
+        acc = (acc + weight_68 * 2 + 5) & 127;
+        aux ^= (weight_68 & 15);
+    } else {
+        acc = (acc - weight_68 + 11) & 127;
+        aux += 3;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_5(int p0, int p1) {
+    int acc = (p0 + 48) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 22;
+    int checksum_77 = (aux + st.buffer[1]) & 3;
+    switch (checksum_77) {
+        case 0: acc = (acc + 3) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    int segment_15 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + segment_15) & 63;
+    acc ^= aux;
+    int metric_94 = (st.buffer[0] * 3 + aux) & 63;
+    if (metric_94 > 39) {
+        acc = (acc + metric_94 * 2 + 5) & 127;
+        aux ^= (metric_94 & 15);
+    } else {
+        acc = (acc - metric_94 + 11) & 127;
+        aux += 3;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_6(int p0, int p1, int p2, int p3, int p4) {
+    int acc = (p0 + 21) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 26;
+    int tally_99 = 0;
+    for (int k = 0; k < 2; k++) {
+        tally_99 = (tally_99 + k * 4 + st.buffer[k % 3]) & 31;
+        acc = (acc + tally_99) & 127;
+    }
+    int metric_59 = (st.buffer[0] * 3 + aux) & 63;
+    if (metric_59 > 43) {
+        acc = (acc + metric_59 * 2 + 5) & 127;
+        aux ^= (metric_59 & 15);
+    } else {
+        acc = (acc - metric_59 + 11) & 127;
+        aux += 3;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_7(int p0, int p1) {
+    int acc = (p0 + 47) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 22;
+    int metric_65 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + metric_65) & 63;
+    acc ^= aux;
+    st.buffer[1] = (st.buffer[1] + 4) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int local_arr[3] = {4, 9, 15};
+    int scale_14 = local_arr[aux % 3];
+    acc = (acc + scale_14 * 2) & 127;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_8(int p0, int p1, int p2) {
+    int acc = (p0 + 23) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 19;
+    st.buffer[1] = (st.buffer[1] + 6) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int local_arr[3] = {4, 9, 15};
+    int segment_36 = local_arr[aux % 3];
+    acc = (acc + segment_36 * 2) & 127;
+    int phase_51 = (st.buffer[0] * 3 + aux) & 63;
+    if (phase_51 > 17) {
+        acc = (acc + phase_51 * 2 + 5) & 127;
+        aux ^= (phase_51 & 15);
+    } else {
+        acc = (acc - phase_51 + 11) & 127;
+        aux += 3;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_9(int p0, int p1) {
+    int acc = (p0 + 10) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 18;
+    st.buffer[1] = (st.buffer[1] + 7) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int quotient_75 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + quotient_75) & 63;
+    acc ^= aux;
+    int index_reg_31 = (aux + st.buffer[1]) & 3;
+    switch (index_reg_31) {
+        case 0: acc = (acc + 9) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_10(int p0, int p1, int p2) {
+    int acc = (p0 + 14) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 8;
+    int local_arr[3] = {4, 9, 15};
+    int bound_39 = local_arr[aux % 3];
+    acc = (acc + bound_39 * 2) & 127;
+    int bound_92 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + bound_92) & 63;
+    acc ^= aux;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_11(int p0, int p1, int p2, int p3) {
+    int acc = (p0 + 11) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 17;
+    int quantum_31 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + quantum_31) & 63;
+    acc ^= aux;
+    int cursor_49 = (st.buffer[0] * 3 + aux) & 63;
+    if (cursor_49 > 15) {
+        acc = (acc + cursor_49 * 2 + 5) & 127;
+        aux ^= (cursor_49 & 15);
+    } else {
+        acc = (acc - cursor_49 + 11) & 127;
+        aux += 3;
+    }
+    int checksum_38 = (aux + st.buffer[1]) & 3;
+    switch (checksum_38) {
+        case 0: acc = (acc + 1) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    st.buffer[1] = (st.buffer[1] + 9) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_12(int p0, int p1, int p2) {
+    int acc = (p0 + 1) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct StreamBuffer_R000300_2013_1 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 25;
+    int delta_16 = 0;
+    for (int k = 0; k < 3; k++) {
+        delta_16 = (delta_16 + k * 4 + st.buffer[k % 3]) & 31;
+        acc = (acc + delta_16) & 127;
+    }
+    int quantum_74 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + quantum_74) & 63;
+    acc ^= aux;
+    int local_arr[3] = {4, 9, 15};
+    int index_reg_83 = local_arr[aux % 3];
+    acc = (acc + index_reg_83 * 2) & 127;
+    return (acc + aux) & 255;
+}
+
+int fn_R000300_2013_13(int p0, int p1, int p2, int p3) {
+    int acc = (p0 + 50) & 127;
+    int aux = (p1 ^ 0x3C) & 63;
+    struct MatrixBlock_R000300_2013_0 st = {0};
+    st.buffer[0] = (p0 + 3) & 15;
+    st.buffer[1] = (p1 + 7) & 15;
+    st.buffer[2] = 13;
+    st.buffer[1] = (st.buffer[1] + 4) & 15;
+    acc = (acc + st.buffer[1]) & 127;
+    int pivot_38 = (st.buffer[0] * 3 + aux) & 63;
+    if (pivot_38 > 36) {
+        acc = (acc + pivot_38 * 2 + 5) & 127;
+        aux ^= (pivot_38 & 15);
+    } else {
+        acc = (acc - pivot_38 + 11) & 127;
+        aux += 3;
+    }
+    int window_83 = ((acc << 1) ^ (aux >> 1)) & 63;
+    aux = (aux + window_83) & 63;
+    acc ^= aux;
+    int threshold_38 = (aux + st.buffer[1]) & 3;
+    switch (threshold_38) {
+        case 0: acc = (acc + 3) & 127; break;
+        case 1: aux ^= 0x1F; break;
+        case 2: acc = (acc ^ 0x2A) & 127; break;
+        default: acc = (acc + 7) & 127; break;
+    }
+    return (acc + aux) & 255;
+}
+
+int main() {
+    int sec_r000300_0;
+    int sec_r000300_1;
+    int sec_r000300_2;
+    int sec_r000300_3;
+    int sec_r000300_4;
+    int sec_r000300_5;
+    int sec_r000300_6;
+    int sec_r000300_7;
+    int sec_r000300_8;
+    int sec_r000300_9;
+    int sec_r000300_10;
+    int sec_r000300_11;
+    int sec_r000300_12;
+    int sec_r000300_13;
+    int sec_r000300_14;
+    int sec_r000300_15;
+    int sec_r000300_16;
+    int pub_r000300_0;
+    int pub_r000300_1;
+    int pub_r000300_2;
+    int pub_r000300_3;
+    int pub_r000300_4;
+    int pub_r000300_5;
+    int pub_r000300_6;
+    int pub_r000300_7;
+    int pub_r000300_8;
+    int pub_r000300_9;
+    int pub_r000300_10;
+    int pub_r000300_11;
+    int pub_r000300_12;
+    int pub_r000300_13;
+    int pub_r000300_14;
+    int pub_r000300_15;
+    int pub_r000300_16;
+    int pub_r000300_17;
+    int out_sink = 0;
+    int chk_sum = 0;
+
+    __CPROVER_assume(pub_r000300_0 >= -100 && pub_r000300_0 <= 100);
+    __CPROVER_assume(pub_r000300_1 >= -100 && pub_r000300_1 <= 100);
+    __CPROVER_assume(pub_r000300_2 >= -100 && pub_r000300_2 <= 100);
+    __CPROVER_assume(pub_r000300_3 >= -100 && pub_r000300_3 <= 100);
+    __CPROVER_assume(pub_r000300_4 >= -100 && pub_r000300_4 <= 100);
+    __CPROVER_assume(pub_r000300_5 >= -100 && pub_r000300_5 <= 100);
+    __CPROVER_assume(pub_r000300_6 >= -100 && pub_r000300_6 <= 100);
+    __CPROVER_assume(pub_r000300_7 >= -100 && pub_r000300_7 <= 100);
+    __CPROVER_assume(pub_r000300_8 >= -100 && pub_r000300_8 <= 100);
+    __CPROVER_assume(pub_r000300_9 >= -100 && pub_r000300_9 <= 100);
+    __CPROVER_assume(pub_r000300_10 >= -100 && pub_r000300_10 <= 100);
+    __CPROVER_assume(pub_r000300_11 >= -100 && pub_r000300_11 <= 100);
+    __CPROVER_assume(pub_r000300_12 >= -100 && pub_r000300_12 <= 100);
+    __CPROVER_assume(pub_r000300_13 >= -100 && pub_r000300_13 <= 100);
+    __CPROVER_assume(pub_r000300_14 >= -100 && pub_r000300_14 <= 100);
+    __CPROVER_assume(pub_r000300_15 >= -100 && pub_r000300_15 <= 100);
+    __CPROVER_assume(pub_r000300_16 >= -100 && pub_r000300_16 <= 100);
+    __CPROVER_assume(pub_r000300_17 >= -100 && pub_r000300_17 <= 100);
+    __CPROVER_assume(sec_r000300_0 >= 0 && sec_r000300_0 <= 255);
+    __CPROVER_assume(sec_r000300_1 >= 0 && sec_r000300_1 <= 255);
+    __CPROVER_assume(sec_r000300_2 >= 0 && sec_r000300_2 <= 255);
+    __CPROVER_assume(sec_r000300_3 >= 0 && sec_r000300_3 <= 255);
+    __CPROVER_assume(sec_r000300_4 >= 0 && sec_r000300_4 <= 255);
+    __CPROVER_assume(sec_r000300_5 >= 0 && sec_r000300_5 <= 255);
+    __CPROVER_assume(sec_r000300_6 >= 0 && sec_r000300_6 <= 255);
+    __CPROVER_assume(sec_r000300_7 >= 0 && sec_r000300_7 <= 255);
+    __CPROVER_assume(sec_r000300_8 >= 0 && sec_r000300_8 <= 255);
+    __CPROVER_assume(sec_r000300_9 >= 0 && sec_r000300_9 <= 255);
+    __CPROVER_assume(sec_r000300_10 >= 0 && sec_r000300_10 <= 255);
+    __CPROVER_assume(sec_r000300_11 >= 0 && sec_r000300_11 <= 255);
+    __CPROVER_assume(sec_r000300_12 >= 0 && sec_r000300_12 <= 255);
+    __CPROVER_assume(sec_r000300_13 >= 0 && sec_r000300_13 <= 255);
+    __CPROVER_assume(sec_r000300_14 >= 0 && sec_r000300_14 <= 255);
+    __CPROVER_assume(sec_r000300_15 >= 0 && sec_r000300_15 <= 255);
+    __CPROVER_assume(sec_r000300_16 >= 0 && sec_r000300_16 <= 255);
+
+    struct MatrixBlock_R000300_2013_0 st_var_0 = {0};
+    st_var_0.buffer[0] = (pub_r000300_0 + 1) & 15;
+    st_var_0.buffer[1] = (pub_r000300_0 + 4) & 15;
+    st_var_0.buffer[2] = (pub_r000300_0 + 7) & 15;
+    struct StreamBuffer_R000300_2013_1 st_var_1 = {0};
+    st_var_1.buffer[0] = (pub_r000300_0 + 4) & 15;
+    st_var_1.buffer[1] = (pub_r000300_0 + 9) & 15;
+    st_var_1.buffer[2] = (pub_r000300_0 + 9) & 15;
+
+    union TelemetryField_R000300_2013_0 u_var;
+    u_var.word = 0;
+    int table[4] = { 11, 23, 47, 89 };
+
+    /* Execution Pipeline Stage 0 */
+    int stage_v_0 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_0 = (stage_v_0 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_0) & 127;
+    }
+    out_sink = (out_sink + stage_v_0) & 255;
+
+    /* Execution Pipeline Stage 1 */
+    int stage_v_1 = (st_var_1.buffer[0] ^ 4) & 3;
+    switch (stage_v_1) {
+        case 0:
+            out_sink = (out_sink + 8) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 2 */
+    int stage_v_2 = (st_var_0.buffer[0] ^ 5) & 3;
+    switch (stage_v_2) {
+        case 0:
+            out_sink = (out_sink + 9) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 3 */
+    int stage_v_3 = table[3];
+    table[3] = (table[0] + 7) & 63;
+    out_sink = (out_sink + stage_v_3) & 255;
+
+    /* Execution Pipeline Stage 4 */
+    int stage_v_4 = (out_sink > 100) ? (chk_sum & 31) : (9 & 31);
+    out_sink = (out_sink + stage_v_4) & 255;
+    chk_sum ^= (stage_v_4 << 1) & 127;
+
+    /* Execution Pipeline Stage 5 */
+    int stage_v_5 = (out_sink > 100) ? (chk_sum & 31) : (10 & 31);
+    out_sink = (out_sink + stage_v_5) & 255;
+    chk_sum ^= (stage_v_5 << 1) & 127;
+
+    /* Execution Pipeline Stage 6 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 7) & 15;
+    int stage_v_6 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_6) & 255;
+    chk_sum ^= stage_v_6;
+
+    /* Execution Pipeline Stage 7 */
+    int stage_v_7 = (st_var_1.buffer[0] ^ 10) & 3;
+    switch (stage_v_7) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 8 */
+    int stage_v_8 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_8 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 9 */
+    int stage_v_9 = table[1];
+    table[1] = (table[2] + 19) & 63;
+    out_sink = (out_sink + stage_v_9) & 255;
+
+    /* Execution Pipeline Stage 10 */
+    int stage_v_10 = table[2];
+    table[2] = (table[3] + 21) & 63;
+    out_sink = (out_sink + stage_v_10) & 255;
+
+    /* Execution Pipeline Stage 11 */
+    int stage_v_11 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_11 = (stage_v_11 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_11) & 127;
+    }
+    out_sink = (out_sink + stage_v_11) & 255;
+
+    /* Execution Pipeline Stage 12 */
+    int stage_v_12 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_12 = (stage_v_12 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_12) & 127;
+    }
+    out_sink = (out_sink + stage_v_12) & 255;
+
+    /* Execution Pipeline Stage 13 */
+    st_var_1.buffer[1] = (st_var_1.buffer[1] + 14) & 15;
+    int stage_v_13 = (st_var_1.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_13) & 255;
+    chk_sum ^= stage_v_13;
+
+    /* Execution Pipeline Stage 14 */
+    int stage_v_14 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_14 = (stage_v_14 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_14) & 127;
+    }
+    out_sink = (out_sink + stage_v_14) & 255;
+
+    /* Execution Pipeline Stage 15 */
+    int stage_v_15 = (st_var_1.buffer[0] * 2 + 52) & 63;
+    if (stage_v_15 > 21) {
+        out_sink = (out_sink + stage_v_15 - 5) & 255;
+        if (stage_v_15 > 36) {
+            chk_sum ^= (stage_v_15 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_15 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 16 */
+    int stage_v_16 = (st_var_0.buffer[1] * 2 + 55) & 63;
+    if (stage_v_16 > 15) {
+        out_sink = (out_sink + stage_v_16 - 5) & 255;
+        if (stage_v_16 > 30) {
+            chk_sum ^= (stage_v_16 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_16 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 17 */
+    int stage_v_17 = table[1];
+    table[1] = (table[2] + 35) & 63;
+    out_sink = (out_sink + stage_v_17) & 255;
+
+    /* Execution Pipeline Stage 18 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 19) & 15;
+    int stage_v_18 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_18) & 255;
+    chk_sum ^= stage_v_18;
+
+    /* Execution Pipeline Stage 19 */
+    int stage_v_19 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_19 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 20 */
+    int stage_v_20 = (out_sink > 100) ? (chk_sum & 31) : (25 & 31);
+    out_sink = (out_sink + stage_v_20) & 255;
+    chk_sum ^= (stage_v_20 << 1) & 127;
+
+    /* Execution Pipeline Stage 21 */
+    int stage_v_21 = (st_var_1.buffer[0] ^ 24) & 3;
+    switch (stage_v_21) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 22 */
+    int stage_v_22 = (st_var_0.buffer[0] ^ 25) & 3;
+    switch (stage_v_22) {
+        case 0:
+            out_sink = (out_sink + 4) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 23 */
+    int stage_v_23 = table[3];
+    table[3] = (table[0] + 47) & 63;
+    out_sink = (out_sink + stage_v_23) & 255;
+
+    /* Execution Pipeline Stage 24 */
+    int stage_v_24 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_24 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 25 */
+    int stage_v_25 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_25 = (stage_v_25 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_25) & 127;
+    }
+    out_sink = (out_sink + stage_v_25) & 255;
+
+    /* Execution Pipeline Stage 26 */
+    int stage_v_26 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_26 = (stage_v_26 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_26) & 127;
+    }
+    out_sink = (out_sink + stage_v_26) & 255;
+
+    /* Execution Pipeline Stage 27 */
+    int stage_v_27 = (st_var_1.buffer[0] ^ 30) & 3;
+    switch (stage_v_27) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 28 */
+    int stage_v_28 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_28 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 29 */
+    int stage_v_29 = (st_var_1.buffer[2] * 2 + 94) & 63;
+    if (stage_v_29 > 32) {
+        out_sink = (out_sink + stage_v_29 - 5) & 255;
+        if (stage_v_29 > 47) {
+            chk_sum ^= (stage_v_29 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_29 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 30 */
+    int stage_v_30 = table[2];
+    table[2] = (table[3] + 61) & 63;
+    out_sink = (out_sink + stage_v_30) & 255;
+
+    /* Execution Pipeline Stage 31 */
+    int stage_v_31 = (out_sink > 100) ? (chk_sum & 31) : (36 & 31);
+    out_sink = (out_sink + stage_v_31) & 255;
+    chk_sum ^= (stage_v_31 << 1) & 127;
+
+    /* Execution Pipeline Stage 32 */
+    int stage_v_32 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_32 = (stage_v_32 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_32) & 127;
+    }
+    out_sink = (out_sink + stage_v_32) & 255;
+
+    /* Execution Pipeline Stage 33 */
+    int stage_v_33 = table[1];
+    table[1] = (table[2] + 67) & 63;
+    out_sink = (out_sink + stage_v_33) & 255;
+
+    /* Execution Pipeline Stage 34 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 35) & 15;
+    int stage_v_34 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_34) & 255;
+    chk_sum ^= stage_v_34;
+
+    /* Execution Pipeline Stage 35 */
+    int stage_v_35 = (st_var_1.buffer[0] ^ 38) & 3;
+    switch (stage_v_35) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 36 */
+    int stage_v_36 = table[0];
+    table[0] = (table[1] + 73) & 63;
+    out_sink = (out_sink + stage_v_36) & 255;
+
+    /* Execution Pipeline Stage 37 */
+    st_var_1.buffer[1] = (st_var_1.buffer[1] + 38) & 15;
+    int stage_v_37 = (st_var_1.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_37) & 255;
+    chk_sum ^= stage_v_37;
+
+    /* Execution Pipeline Stage 38 */
+    int stage_v_38 = table[2];
+    table[2] = (table[3] + 77) & 63;
+    out_sink = (out_sink + stage_v_38) & 255;
+
+    /* Execution Pipeline Stage 39 */
+    int stage_v_39 = (out_sink > 100) ? (chk_sum & 31) : (44 & 31);
+    out_sink = (out_sink + stage_v_39) & 255;
+    chk_sum ^= (stage_v_39 << 1) & 127;
+
+    /* Execution Pipeline Stage 40 */
+    int stage_v_40 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_40 = (stage_v_40 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_40) & 127;
+    }
+    out_sink = (out_sink + stage_v_40) & 255;
+
+    /* Execution Pipeline Stage 41 */
+    int stage_v_41 = (st_var_1.buffer[0] ^ 44) & 3;
+    switch (stage_v_41) {
+        case 0:
+            out_sink = (out_sink + 9) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 42 */
+    int stage_v_42 = (st_var_0.buffer[0] ^ 45) & 3;
+    switch (stage_v_42) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 43 */
+    int stage_v_43 = table[3];
+    table[3] = (table[0] + 87) & 63;
+    out_sink = (out_sink + stage_v_43) & 255;
+
+    /* Execution Pipeline Stage 44 */
+    int stage_v_44 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_44 = (stage_v_44 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_44) & 127;
+    }
+    out_sink = (out_sink + stage_v_44) & 255;
+
+    /* Execution Pipeline Stage 45 */
+    int stage_v_45 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[1] = (unsigned char)(stage_v_45 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[1]) & 127;
+
+    /* Execution Pipeline Stage 46 */
+    int stage_v_46 = (st_var_0.buffer[0] ^ 49) & 3;
+    switch (stage_v_46) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 47 */
+    int stage_v_47 = (st_var_1.buffer[2] * 2 + 148) & 63;
+    if (stage_v_47 > 19) {
+        out_sink = (out_sink + stage_v_47 - 5) & 255;
+        if (stage_v_47 > 34) {
+            chk_sum ^= (stage_v_47 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_47 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 48 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 49) & 15;
+    int stage_v_48 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_48) & 255;
+    chk_sum ^= stage_v_48;
+
+    /* Execution Pipeline Stage 49 */
+    st_var_1.buffer[1] = (st_var_1.buffer[1] + 50) & 15;
+    int stage_v_49 = (st_var_1.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_49) & 255;
+    chk_sum ^= stage_v_49;
+
+    /* Execution Pipeline Stage 50 */
+    int stage_v_50 = (out_sink > 100) ? (chk_sum & 31) : (55 & 31);
+    out_sink = (out_sink + stage_v_50) & 255;
+    chk_sum ^= (stage_v_50 << 1) & 127;
+
+    /* Execution Pipeline Stage 51 */
+    int stage_v_51 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_51 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 52 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 53) & 15;
+    int stage_v_52 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_52) & 255;
+    chk_sum ^= stage_v_52;
+
+    /* Execution Pipeline Stage 53 */
+    int stage_v_53 = (st_var_1.buffer[2] * 2 + 166) & 63;
+    if (stage_v_53 > 32) {
+        out_sink = (out_sink + stage_v_53 - 5) & 255;
+        if (stage_v_53 > 47) {
+            chk_sum ^= (stage_v_53 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_53 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 54 */
+    int stage_v_54 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_54 = (stage_v_54 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_54) & 127;
+    }
+    out_sink = (out_sink + stage_v_54) & 255;
+
+    /* Execution Pipeline Stage 55 */
+    int stage_v_55 = (st_var_1.buffer[1] * 2 + 172) & 63;
+    if (stage_v_55 > 28) {
+        out_sink = (out_sink + stage_v_55 - 5) & 255;
+        if (stage_v_55 > 43) {
+            chk_sum ^= (stage_v_55 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_55 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 56 */
+    int stage_v_56 = (out_sink > 100) ? (chk_sum & 31) : (61 & 31);
+    out_sink = (out_sink + stage_v_56) & 255;
+    chk_sum ^= (stage_v_56 << 1) & 127;
+
+    /* Execution Pipeline Stage 57 */
+    int stage_v_57 = (st_var_1.buffer[0] ^ 60) & 3;
+    switch (stage_v_57) {
+        case 0:
+            out_sink = (out_sink + 4) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 58 */
+    int stage_v_58 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_58 = (stage_v_58 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_58) & 127;
+    }
+    out_sink = (out_sink + stage_v_58) & 255;
+
+    /* Execution Pipeline Stage 59 */
+    int stage_v_59 = (out_sink > 100) ? (chk_sum & 31) : (64 & 31);
+    out_sink = (out_sink + stage_v_59) & 255;
+    chk_sum ^= (stage_v_59 << 1) & 127;
+
+    /* Execution Pipeline Stage 60 */
+    int stage_v_60 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_60 = (stage_v_60 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_60) & 127;
+    }
+    out_sink = (out_sink + stage_v_60) & 255;
+
+    /* Execution Pipeline Stage 61 */
+    int stage_v_61 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_61 = (stage_v_61 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_61) & 127;
+    }
+    out_sink = (out_sink + stage_v_61) & 255;
+
+    /* Execution Pipeline Stage 62 */
+    int stage_v_62 = table[2];
+    table[2] = (table[3] + 125) & 63;
+    out_sink = (out_sink + stage_v_62) & 255;
+
+    /* Execution Pipeline Stage 63 */
+    int stage_v_63 = (st_var_1.buffer[0] * 2 + 196) & 63;
+    if (stage_v_63 > 35) {
+        out_sink = (out_sink + stage_v_63 - 5) & 255;
+        if (stage_v_63 > 50) {
+            chk_sum ^= (stage_v_63 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_63 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 64 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 65) & 15;
+    int stage_v_64 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_64) & 255;
+    chk_sum ^= stage_v_64;
+
+    /* Execution Pipeline Stage 65 */
+    int stage_v_65 = (out_sink > 100) ? (chk_sum & 31) : (70 & 31);
+    out_sink = (out_sink + stage_v_65) & 255;
+    chk_sum ^= (stage_v_65 << 1) & 127;
+
+    /* Execution Pipeline Stage 66 */
+    int stage_v_66 = (out_sink > 100) ? (chk_sum & 31) : (71 & 31);
+    out_sink = (out_sink + stage_v_66) & 255;
+    chk_sum ^= (stage_v_66 << 1) & 127;
+
+    /* Execution Pipeline Stage 67 */
+    int stage_v_67 = (st_var_1.buffer[0] ^ 70) & 3;
+    switch (stage_v_67) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 68 */
+    int stage_v_68 = (st_var_0.buffer[0] ^ 71) & 3;
+    switch (stage_v_68) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 69 */
+    int stage_v_69 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_69 = (stage_v_69 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_69) & 127;
+    }
+    out_sink = (out_sink + stage_v_69) & 255;
+
+    /* Execution Pipeline Stage 70 */
+    int stage_v_70 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_70 = (stage_v_70 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_70) & 127;
+    }
+    out_sink = (out_sink + stage_v_70) & 255;
+
+    /* Execution Pipeline Stage 71 */
+    int stage_v_71 = (out_sink > 100) ? (chk_sum & 31) : (76 & 31);
+    out_sink = (out_sink + stage_v_71) & 255;
+    chk_sum ^= (stage_v_71 << 1) & 127;
+
+    /* Execution Pipeline Stage 72 */
+    int stage_v_72 = table[0];
+    table[0] = (table[1] + 145) & 63;
+    out_sink = (out_sink + stage_v_72) & 255;
+
+    /* Execution Pipeline Stage 73 */
+    int stage_v_73 = (st_var_1.buffer[1] * 2 + 226) & 63;
+    if (stage_v_73 > 14) {
+        out_sink = (out_sink + stage_v_73 - 5) & 255;
+        if (stage_v_73 > 29) {
+            chk_sum ^= (stage_v_73 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_73 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 74 */
+    int stage_v_74 = (out_sink > 100) ? (chk_sum & 31) : (79 & 31);
+    out_sink = (out_sink + stage_v_74) & 255;
+    chk_sum ^= (stage_v_74 << 1) & 127;
+
+    /* Execution Pipeline Stage 75 */
+    int stage_v_75 = (st_var_1.buffer[0] ^ 78) & 3;
+    switch (stage_v_75) {
+        case 0:
+            out_sink = (out_sink + 8) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 76 */
+    int stage_v_76 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_76 = (stage_v_76 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_76) & 127;
+    }
+    out_sink = (out_sink + stage_v_76) & 255;
+
+    /* Execution Pipeline Stage 77 */
+    int stage_v_77 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_77 = (stage_v_77 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_77) & 127;
+    }
+    out_sink = (out_sink + stage_v_77) & 255;
+
+    /* Execution Pipeline Stage 78 */
+    int stage_v_78 = table[2];
+    table[2] = (table[3] + 157) & 63;
+    out_sink = (out_sink + stage_v_78) & 255;
+
+    /* Execution Pipeline Stage 79 */
+    int stage_v_79 = (st_var_1.buffer[0] ^ 82) & 3;
+    switch (stage_v_79) {
+        case 0:
+            out_sink = (out_sink + 2) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 80 */
+    int stage_v_80 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_80 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 81 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 82) & 15;
+    int stage_v_81 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_81) & 255;
+    chk_sum ^= stage_v_81;
+
+    /* Execution Pipeline Stage 82 */
+    int stage_v_82 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_82 = (stage_v_82 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_82) & 127;
+    }
+    out_sink = (out_sink + stage_v_82) & 255;
+
+    /* Execution Pipeline Stage 83 */
+    int stage_v_83 = (st_var_1.buffer[2] * 2 + 256) & 63;
+    if (stage_v_83 > 28) {
+        out_sink = (out_sink + stage_v_83 - 5) & 255;
+        if (stage_v_83 > 43) {
+            chk_sum ^= (stage_v_83 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_83 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 84 */
+    int stage_v_84 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_84 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 85 */
+    int stage_v_85 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_85 = (stage_v_85 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_85) & 127;
+    }
+    out_sink = (out_sink + stage_v_85) & 255;
+
+    /* Execution Pipeline Stage 86 */
+    st_var_0.buffer[2] = (st_var_0.buffer[2] + 87) & 15;
+    int stage_v_86 = (st_var_0.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_86) & 255;
+    chk_sum ^= stage_v_86;
+
+    /* Execution Pipeline Stage 87 */
+    int stage_v_87 = (st_var_1.buffer[0] * 2 + 268) & 63;
+    if (stage_v_87 > 12) {
+        out_sink = (out_sink + stage_v_87 - 5) & 255;
+        if (stage_v_87 > 27) {
+            chk_sum ^= (stage_v_87 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_87 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 88 */
+    int stage_v_88 = (st_var_0.buffer[1] * 2 + 271) & 63;
+    if (stage_v_88 > 11) {
+        out_sink = (out_sink + stage_v_88 - 5) & 255;
+        if (stage_v_88 > 26) {
+            chk_sum ^= (stage_v_88 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_88 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 89 */
+    int stage_v_89 = table[1];
+    table[1] = (table[2] + 179) & 63;
+    out_sink = (out_sink + stage_v_89) & 255;
+
+    /* Execution Pipeline Stage 90 */
+    int stage_v_90 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_90 = (stage_v_90 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_90) & 127;
+    }
+    out_sink = (out_sink + stage_v_90) & 255;
+
+    /* Execution Pipeline Stage 91 */
+    st_var_1.buffer[1] = (st_var_1.buffer[1] + 92) & 15;
+    int stage_v_91 = (st_var_1.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_91) & 255;
+    chk_sum ^= stage_v_91;
+
+    /* Execution Pipeline Stage 92 */
+    int stage_v_92 = (st_var_0.buffer[0] ^ 95) & 3;
+    switch (stage_v_92) {
+        case 0:
+            out_sink = (out_sink + 3) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 93 */
+    int stage_v_93 = (out_sink > 100) ? (chk_sum & 31) : (98 & 31);
+    out_sink = (out_sink + stage_v_93) & 255;
+    chk_sum ^= (stage_v_93 << 1) & 127;
+
+    /* Execution Pipeline Stage 94 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 95) & 15;
+    int stage_v_94 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_94) & 255;
+    chk_sum ^= stage_v_94;
+
+    /* Execution Pipeline Stage 95 */
+    st_var_1.buffer[2] = (st_var_1.buffer[2] + 96) & 15;
+    int stage_v_95 = (st_var_1.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_95) & 255;
+    chk_sum ^= stage_v_95;
+
+    /* Execution Pipeline Stage 96 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 97) & 15;
+    int stage_v_96 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_96) & 255;
+    chk_sum ^= stage_v_96;
+
+    /* Execution Pipeline Stage 97 */
+    int stage_v_97 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_97 = (stage_v_97 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_97) & 127;
+    }
+    out_sink = (out_sink + stage_v_97) & 255;
+
+    /* Execution Pipeline Stage 98 */
+    int stage_v_98 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[2] = (unsigned char)(stage_v_98 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[2]) & 127;
+
+    /* Execution Pipeline Stage 99 */
+    int stage_v_99 = (st_var_1.buffer[0] ^ 102) & 3;
+    switch (stage_v_99) {
+        case 0:
+            out_sink = (out_sink + 3) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 100 */
+    int stage_v_100 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_100 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 101 */
+    int stage_v_101 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[1] = (unsigned char)(stage_v_101 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[1]) & 127;
+
+    /* Execution Pipeline Stage 102 */
+    int stage_v_102 = (st_var_0.buffer[0] ^ 105) & 3;
+    switch (stage_v_102) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 103 */
+    int stage_v_103 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_103 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 104 */
+    int stage_v_104 = (st_var_0.buffer[0] ^ 107) & 3;
+    switch (stage_v_104) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 105 */
+    int stage_v_105 = (out_sink > 100) ? (chk_sum & 31) : (110 & 31);
+    out_sink = (out_sink + stage_v_105) & 255;
+    chk_sum ^= (stage_v_105 << 1) & 127;
+
+    /* Execution Pipeline Stage 106 */
+    int stage_v_106 = table[2];
+    table[2] = (table[3] + 213) & 63;
+    out_sink = (out_sink + stage_v_106) & 255;
+
+    /* Execution Pipeline Stage 107 */
+    int stage_v_107 = (st_var_1.buffer[0] ^ 110) & 3;
+    switch (stage_v_107) {
+        case 0:
+            out_sink = (out_sink + 4) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 108 */
+    int stage_v_108 = (out_sink > 100) ? (chk_sum & 31) : (113 & 31);
+    out_sink = (out_sink + stage_v_108) & 255;
+    chk_sum ^= (stage_v_108 << 1) & 127;
+
+    /* Execution Pipeline Stage 109 */
+    int stage_v_109 = (st_var_1.buffer[1] * 2 + 334) & 63;
+    if (stage_v_109 > 39) {
+        out_sink = (out_sink + stage_v_109 - 5) & 255;
+        if (stage_v_109 > 54) {
+            chk_sum ^= (stage_v_109 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_109 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 110 */
+    int stage_v_110 = (out_sink > 100) ? (chk_sum & 31) : (115 & 31);
+    out_sink = (out_sink + stage_v_110) & 255;
+    chk_sum ^= (stage_v_110 << 1) & 127;
+
+    /* Execution Pipeline Stage 111 */
+    int stage_v_111 = table[3];
+    table[3] = (table[0] + 223) & 63;
+    out_sink = (out_sink + stage_v_111) & 255;
+
+    /* Execution Pipeline Stage 112 */
+    int stage_v_112 = (st_var_0.buffer[1] * 2 + 343) & 63;
+    if (stage_v_112 > 37) {
+        out_sink = (out_sink + stage_v_112 - 5) & 255;
+        if (stage_v_112 > 52) {
+            chk_sum ^= (stage_v_112 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_112 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 113 */
+    int stage_v_113 = (st_var_1.buffer[0] ^ 116) & 3;
+    switch (stage_v_113) {
+        case 0:
+            out_sink = (out_sink + 9) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 114 */
+    int stage_v_114 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_114 = (stage_v_114 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_114) & 127;
+    }
+    out_sink = (out_sink + stage_v_114) & 255;
+
+    /* Execution Pipeline Stage 115 */
+    int stage_v_115 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_115 = (stage_v_115 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_115) & 127;
+    }
+    out_sink = (out_sink + stage_v_115) & 255;
+
+    /* Execution Pipeline Stage 116 */
+    st_var_0.buffer[2] = (st_var_0.buffer[2] + 117) & 15;
+    int stage_v_116 = (st_var_0.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_116) & 255;
+    chk_sum ^= stage_v_116;
+
+    /* Execution Pipeline Stage 117 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 118) & 15;
+    int stage_v_117 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_117) & 255;
+    chk_sum ^= stage_v_117;
+
+    /* Execution Pipeline Stage 118 */
+    int stage_v_118 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_118 = (stage_v_118 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_118) & 127;
+    }
+    out_sink = (out_sink + stage_v_118) & 255;
+
+    /* Execution Pipeline Stage 119 */
+    int stage_v_119 = (st_var_1.buffer[0] ^ 122) & 3;
+    switch (stage_v_119) {
+        case 0:
+            out_sink = (out_sink + 8) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 120 */
+    int stage_v_120 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_120 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 121 */
+    int stage_v_121 = table[1];
+    table[1] = (table[2] + 243) & 63;
+    out_sink = (out_sink + stage_v_121) & 255;
+
+    /* Execution Pipeline Stage 122 */
+    int stage_v_122 = (out_sink > 100) ? (chk_sum & 31) : (127 & 31);
+    out_sink = (out_sink + stage_v_122) & 255;
+    chk_sum ^= (stage_v_122 << 1) & 127;
+
+    /* Execution Pipeline Stage 123 */
+    int stage_v_123 = (st_var_1.buffer[0] ^ 126) & 3;
+    switch (stage_v_123) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 124 */
+    int stage_v_124 = (out_sink > 100) ? (chk_sum & 31) : (129 & 31);
+    out_sink = (out_sink + stage_v_124) & 255;
+    chk_sum ^= (stage_v_124 << 1) & 127;
+
+    /* Execution Pipeline Stage 125 */
+    int stage_v_125 = (out_sink > 100) ? (chk_sum & 31) : (130 & 31);
+    out_sink = (out_sink + stage_v_125) & 255;
+    chk_sum ^= (stage_v_125 << 1) & 127;
+
+    /* Execution Pipeline Stage 126 */
+    int stage_v_126 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_126 = (stage_v_126 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_126) & 127;
+    }
+    out_sink = (out_sink + stage_v_126) & 255;
+
+    /* Execution Pipeline Stage 127 */
+    int stage_v_127 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_127 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 128 */
+    int stage_v_128 = table[0];
+    table[0] = (table[1] + 257) & 63;
+    out_sink = (out_sink + stage_v_128) & 255;
+
+    /* Execution Pipeline Stage 129 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 130) & 15;
+    int stage_v_129 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_129) & 255;
+    chk_sum ^= stage_v_129;
+
+    /* Execution Pipeline Stage 130 */
+    int stage_v_130 = (out_sink > 100) ? (chk_sum & 31) : (135 & 31);
+    out_sink = (out_sink + stage_v_130) & 255;
+    chk_sum ^= (stage_v_130 << 1) & 127;
+
+    /* Execution Pipeline Stage 131 */
+    st_var_1.buffer[2] = (st_var_1.buffer[2] + 132) & 15;
+    int stage_v_131 = (st_var_1.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_131) & 255;
+    chk_sum ^= stage_v_131;
+
+    /* Execution Pipeline Stage 132 */
+    int stage_v_132 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_132 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 133 */
+    int stage_v_133 = (out_sink > 100) ? (chk_sum & 31) : (138 & 31);
+    out_sink = (out_sink + stage_v_133) & 255;
+    chk_sum ^= (stage_v_133 << 1) & 127;
+
+    /* Execution Pipeline Stage 134 */
+    int stage_v_134 = table[2];
+    table[2] = (table[3] + 269) & 63;
+    out_sink = (out_sink + stage_v_134) & 255;
+
+    /* Execution Pipeline Stage 135 */
+    int stage_v_135 = table[3];
+    table[3] = (table[0] + 271) & 63;
+    out_sink = (out_sink + stage_v_135) & 255;
+
+    /* Execution Pipeline Stage 136 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 137) & 15;
+    int stage_v_136 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_136) & 255;
+    chk_sum ^= stage_v_136;
+
+    /* Execution Pipeline Stage 137 */
+    st_var_1.buffer[2] = (st_var_1.buffer[2] + 138) & 15;
+    int stage_v_137 = (st_var_1.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_137) & 255;
+    chk_sum ^= stage_v_137;
+
+    /* Execution Pipeline Stage 138 */
+    int stage_v_138 = (out_sink > 100) ? (chk_sum & 31) : (143 & 31);
+    out_sink = (out_sink + stage_v_138) & 255;
+    chk_sum ^= (stage_v_138 << 1) & 127;
+
+    /* Execution Pipeline Stage 139 */
+    int stage_v_139 = table[3];
+    table[3] = (table[0] + 279) & 63;
+    out_sink = (out_sink + stage_v_139) & 255;
+
+    /* Execution Pipeline Stage 140 */
+    int stage_v_140 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_140 = (stage_v_140 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_140) & 127;
+    }
+    out_sink = (out_sink + stage_v_140) & 255;
+
+    /* Execution Pipeline Stage 141 */
+    int stage_v_141 = (st_var_1.buffer[0] ^ 144) & 3;
+    switch (stage_v_141) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 142 */
+    int stage_v_142 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_142 = (stage_v_142 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_142) & 127;
+    }
+    out_sink = (out_sink + stage_v_142) & 255;
+
+    /* Execution Pipeline Stage 143 */
+    int stage_v_143 = (st_var_1.buffer[0] ^ 146) & 3;
+    switch (stage_v_143) {
+        case 0:
+            out_sink = (out_sink + 6) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 144 */
+    int stage_v_144 = (st_var_0.buffer[0] * 2 + 439) & 63;
+    if (stage_v_144 > 20) {
+        out_sink = (out_sink + stage_v_144 - 5) & 255;
+        if (stage_v_144 > 35) {
+            chk_sum ^= (stage_v_144 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_144 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 145 */
+    int stage_v_145 = table[1];
+    table[1] = (table[2] + 291) & 63;
+    out_sink = (out_sink + stage_v_145) & 255;
+
+    /* Execution Pipeline Stage 146 */
+    int stage_v_146 = (st_var_0.buffer[2] * 2 + 445) & 63;
+    if (stage_v_146 > 33) {
+        out_sink = (out_sink + stage_v_146 - 5) & 255;
+        if (stage_v_146 > 48) {
+            chk_sum ^= (stage_v_146 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_146 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 147 */
+    int stage_v_147 = (st_var_1.buffer[0] ^ 150) & 3;
+    switch (stage_v_147) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 148 */
+    int stage_v_148 = (out_sink > 100) ? (chk_sum & 31) : (153 & 31);
+    out_sink = (out_sink + stage_v_148) & 255;
+    chk_sum ^= (stage_v_148 << 1) & 127;
+
+    /* Execution Pipeline Stage 149 */
+    int stage_v_149 = (st_var_1.buffer[2] * 2 + 454) & 63;
+    if (stage_v_149 > 25) {
+        out_sink = (out_sink + stage_v_149 - 5) & 255;
+        if (stage_v_149 > 40) {
+            chk_sum ^= (stage_v_149 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_149 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 150 */
+    int stage_v_150 = (out_sink > 100) ? (chk_sum & 31) : (155 & 31);
+    out_sink = (out_sink + stage_v_150) & 255;
+    chk_sum ^= (stage_v_150 << 1) & 127;
+
+    /* Execution Pipeline Stage 151 */
+    int stage_v_151 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_151 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 152 */
+    st_var_0.buffer[2] = (st_var_0.buffer[2] + 153) & 15;
+    int stage_v_152 = (st_var_0.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_152) & 255;
+    chk_sum ^= stage_v_152;
+
+    /* Execution Pipeline Stage 153 */
+    int stage_v_153 = table[1];
+    table[1] = (table[2] + 307) & 63;
+    out_sink = (out_sink + stage_v_153) & 255;
+
+    /* Execution Pipeline Stage 154 */
+    int stage_v_154 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_154 = (stage_v_154 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_154) & 127;
+    }
+    out_sink = (out_sink + stage_v_154) & 255;
+
+    /* Execution Pipeline Stage 155 */
+    int stage_v_155 = (st_var_1.buffer[0] ^ 158) & 3;
+    switch (stage_v_155) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 156 */
+    int stage_v_156 = (st_var_0.buffer[0] ^ 159) & 3;
+    switch (stage_v_156) {
+        case 0:
+            out_sink = (out_sink + 3) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 157 */
+    int stage_v_157 = table[1];
+    table[1] = (table[2] + 315) & 63;
+    out_sink = (out_sink + stage_v_157) & 255;
+
+    /* Execution Pipeline Stage 158 */
+    int stage_v_158 = (out_sink > 100) ? (chk_sum & 31) : (163 & 31);
+    out_sink = (out_sink + stage_v_158) & 255;
+    chk_sum ^= (stage_v_158 << 1) & 127;
+
+    /* Execution Pipeline Stage 159 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 160) & 15;
+    int stage_v_159 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_159) & 255;
+    chk_sum ^= stage_v_159;
+
+    /* Execution Pipeline Stage 160 */
+    int stage_v_160 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_160 = (stage_v_160 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_160) & 127;
+    }
+    out_sink = (out_sink + stage_v_160) & 255;
+
+    /* Execution Pipeline Stage 161 */
+    int stage_v_161 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_161 = (stage_v_161 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_161) & 127;
+    }
+    out_sink = (out_sink + stage_v_161) & 255;
+
+    /* Execution Pipeline Stage 162 */
+    int stage_v_162 = table[2];
+    table[2] = (table[3] + 325) & 63;
+    out_sink = (out_sink + stage_v_162) & 255;
+
+    /* Execution Pipeline Stage 163 */
+    int stage_v_163 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_163 = (stage_v_163 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_163) & 127;
+    }
+    out_sink = (out_sink + stage_v_163) & 255;
+
+    /* Execution Pipeline Stage 164 */
+    int stage_v_164 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_164 = (stage_v_164 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_164) & 127;
+    }
+    out_sink = (out_sink + stage_v_164) & 255;
+
+    /* Execution Pipeline Stage 165 */
+    int stage_v_165 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[1] = (unsigned char)(stage_v_165 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[1]) & 127;
+
+    /* Execution Pipeline Stage 166 */
+    int stage_v_166 = (st_var_0.buffer[0] ^ 169) & 3;
+    switch (stage_v_166) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 167 */
+    st_var_1.buffer[2] = (st_var_1.buffer[2] + 168) & 15;
+    int stage_v_167 = (st_var_1.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_167) & 255;
+    chk_sum ^= stage_v_167;
+
+    /* Execution Pipeline Stage 168 */
+    int stage_v_168 = table[0];
+    table[0] = (table[1] + 337) & 63;
+    out_sink = (out_sink + stage_v_168) & 255;
+
+    /* Execution Pipeline Stage 169 */
+    int stage_v_169 = table[1];
+    table[1] = (table[2] + 339) & 63;
+    out_sink = (out_sink + stage_v_169) & 255;
+
+    /* Execution Pipeline Stage 170 */
+    int stage_v_170 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_170 = (stage_v_170 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_170) & 127;
+    }
+    out_sink = (out_sink + stage_v_170) & 255;
+
+    /* Execution Pipeline Stage 171 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 172) & 15;
+    int stage_v_171 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_171) & 255;
+    chk_sum ^= stage_v_171;
+
+    /* Execution Pipeline Stage 172 */
+    int stage_v_172 = (st_var_0.buffer[1] * 2 + 523) & 63;
+    if (stage_v_172 > 18) {
+        out_sink = (out_sink + stage_v_172 - 5) & 255;
+        if (stage_v_172 > 33) {
+            chk_sum ^= (stage_v_172 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_172 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 173 */
+    int stage_v_173 = (st_var_1.buffer[2] * 2 + 526) & 63;
+    if (stage_v_173 > 19) {
+        out_sink = (out_sink + stage_v_173 - 5) & 255;
+        if (stage_v_173 > 34) {
+            chk_sum ^= (stage_v_173 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_173 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 174 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 175) & 15;
+    int stage_v_174 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_174) & 255;
+    chk_sum ^= stage_v_174;
+
+    /* Execution Pipeline Stage 175 */
+    int stage_v_175 = table[3];
+    table[3] = (table[0] + 351) & 63;
+    out_sink = (out_sink + stage_v_175) & 255;
+
+    /* Execution Pipeline Stage 176 */
+    int stage_v_176 = (st_var_0.buffer[0] ^ 179) & 3;
+    switch (stage_v_176) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 177 */
+    int stage_v_177 = table[1];
+    table[1] = (table[2] + 355) & 63;
+    out_sink = (out_sink + stage_v_177) & 255;
+
+    /* Execution Pipeline Stage 178 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 179) & 15;
+    int stage_v_178 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_178) & 255;
+    chk_sum ^= stage_v_178;
+
+    /* Execution Pipeline Stage 179 */
+    int stage_v_179 = (st_var_1.buffer[2] * 2 + 544) & 63;
+    if (stage_v_179 > 37) {
+        out_sink = (out_sink + stage_v_179 - 5) & 255;
+        if (stage_v_179 > 52) {
+            chk_sum ^= (stage_v_179 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_179 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 180 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 181) & 15;
+    int stage_v_180 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_180) & 255;
+    chk_sum ^= stage_v_180;
+
+    /* Execution Pipeline Stage 181 */
+    int stage_v_181 = (st_var_1.buffer[1] * 2 + 550) & 63;
+    if (stage_v_181 > 16) {
+        out_sink = (out_sink + stage_v_181 - 5) & 255;
+        if (stage_v_181 > 31) {
+            chk_sum ^= (stage_v_181 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_181 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Execution Pipeline Stage 182 */
+    int stage_v_182 = (out_sink > 100) ? (chk_sum & 31) : (187 & 31);
+    out_sink = (out_sink + stage_v_182) & 255;
+    chk_sum ^= (stage_v_182 << 1) & 127;
+
+    /* Execution Pipeline Stage 183 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 184) & 15;
+    int stage_v_183 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_183) & 255;
+    chk_sum ^= stage_v_183;
+
+    /* Execution Pipeline Stage 184 */
+    int stage_v_184 = table[0];
+    table[0] = (table[1] + 369) & 63;
+    out_sink = (out_sink + stage_v_184) & 255;
+
+    /* Execution Pipeline Stage 185 */
+    int stage_v_185 = table[1];
+    table[1] = (table[2] + 371) & 63;
+    out_sink = (out_sink + stage_v_185) & 255;
+
+    /* Execution Pipeline Stage 186 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 187) & 15;
+    int stage_v_186 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_186) & 255;
+    chk_sum ^= stage_v_186;
+
+    /* Execution Pipeline Stage 187 */
+    int stage_v_187 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[3] = (unsigned char)(stage_v_187 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[3]) & 127;
+
+    /* Execution Pipeline Stage 188 */
+    int stage_v_188 = (st_var_0.buffer[0] ^ 191) & 3;
+    switch (stage_v_188) {
+        case 0:
+            out_sink = (out_sink + 3) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 189 */
+    int stage_v_189 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[1] = (unsigned char)(stage_v_189 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[1]) & 127;
+
+    /* Execution Pipeline Stage 190 */
+    int stage_v_190 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_190 = (stage_v_190 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_190) & 127;
+    }
+    out_sink = (out_sink + stage_v_190) & 255;
+
+    /* Execution Pipeline Stage 191 */
+    st_var_1.buffer[2] = (st_var_1.buffer[2] + 192) & 15;
+    int stage_v_191 = (st_var_1.buffer[2] * 3) & 63;
+    out_sink = (out_sink + stage_v_191) & 255;
+    chk_sum ^= stage_v_191;
+
+    /* Execution Pipeline Stage 192 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 193) & 15;
+    int stage_v_192 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_192) & 255;
+    chk_sum ^= stage_v_192;
+
+    /* Execution Pipeline Stage 193 */
+    int stage_v_193 = 0;
+    for (int step = 0; step < 2; step++) {
+        stage_v_193 = (stage_v_193 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_193) & 127;
+    }
+    out_sink = (out_sink + stage_v_193) & 255;
+
+    /* Execution Pipeline Stage 194 */
+    int stage_v_194 = (st_var_0.buffer[0] ^ 197) & 3;
+    switch (stage_v_194) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 195 */
+    int stage_v_195 = (st_var_1.buffer[0] ^ 198) & 3;
+    switch (stage_v_195) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 196 */
+    int stage_v_196 = (st_var_0.buffer[0] ^ 199) & 3;
+    switch (stage_v_196) {
+        case 0:
+            out_sink = (out_sink + 7) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 197 */
+    int stage_v_197 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_197 = (stage_v_197 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_197) & 127;
+    }
+    out_sink = (out_sink + stage_v_197) & 255;
+
+    /* Execution Pipeline Stage 198 */
+    int stage_v_198 = (out_sink > 100) ? (chk_sum & 31) : (203 & 31);
+    out_sink = (out_sink + stage_v_198) & 255;
+    chk_sum ^= (stage_v_198 << 1) & 127;
+
+    /* Execution Pipeline Stage 199 */
+    int stage_v_199 = table[3];
+    table[3] = (table[0] + 399) & 63;
+    out_sink = (out_sink + stage_v_199) & 255;
+
+    /* Execution Pipeline Stage 200 */
+    int stage_v_200 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_200 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 201 */
+    st_var_1.buffer[0] = (st_var_1.buffer[0] + 202) & 15;
+    int stage_v_201 = (st_var_1.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_201) & 255;
+    chk_sum ^= stage_v_201;
+
+    /* Execution Pipeline Stage 202 */
+    st_var_0.buffer[1] = (st_var_0.buffer[1] + 203) & 15;
+    int stage_v_202 = (st_var_0.buffer[1] * 3) & 63;
+    out_sink = (out_sink + stage_v_202) & 255;
+    chk_sum ^= stage_v_202;
+
+    /* Execution Pipeline Stage 203 */
+    int stage_v_203 = (st_var_1.buffer[0] ^ 206) & 3;
+    switch (stage_v_203) {
+        case 0:
+            out_sink = (out_sink + 2) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 204 */
+    st_var_0.buffer[0] = (st_var_0.buffer[0] + 205) & 15;
+    int stage_v_204 = (st_var_0.buffer[0] * 3) & 63;
+    out_sink = (out_sink + stage_v_204) & 255;
+    chk_sum ^= stage_v_204;
+
+    /* Execution Pipeline Stage 205 */
+    int stage_v_205 = 0;
+    for (int step = 0; step < 3; step++) {
+        stage_v_205 = (stage_v_205 + step * 5 + table[step]) & 63;
+        chk_sum = (chk_sum + stage_v_205) & 127;
+    }
+    out_sink = (out_sink + stage_v_205) & 255;
+
+    /* Execution Pipeline Stage 206 */
+    int stage_v_206 = (st_var_0.buffer[0] ^ 209) & 3;
+    switch (stage_v_206) {
+        case 0:
+            out_sink = (out_sink + 8) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 207 */
+    int stage_v_207 = table[3];
+    table[3] = (table[0] + 415) & 63;
+    out_sink = (out_sink + stage_v_207) & 255;
+
+    /* Execution Pipeline Stage 208 */
+    int stage_v_208 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[0] = (unsigned char)(stage_v_208 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[0]) & 127;
+
+    /* Execution Pipeline Stage 209 */
+    int stage_v_209 = ((out_sink << 1) ^ (chk_sum >> 1)) & 63;
+    u_var.raw[1] = (unsigned char)(stage_v_209 & 255);
+    chk_sum = (chk_sum ^ u_var.raw[1]) & 127;
+
+    /* Execution Pipeline Stage 210 */
+    int stage_v_210 = (st_var_0.buffer[0] ^ 213) & 3;
+    switch (stage_v_210) {
+        case 0:
+            out_sink = (out_sink + 5) & 255;
+            break;
+        case 1:
+            chk_sum ^= 0x3F;
+            break;
+        case 2:
+            out_sink = (out_sink ^ 0x2A) & 255;
+            break;
+        default:
+            chk_sum = (chk_sum + 7) & 127;
+            break;
+    }
+
+    /* Execution Pipeline Stage 211 */
+    int stage_v_211 = table[3];
+    table[3] = (table[0] + 423) & 63;
+    out_sink = (out_sink + stage_v_211) & 255;
+
+    /* Execution Pipeline Stage 212 */
+    int stage_v_212 = table[0];
+    table[0] = (table[1] + 425) & 63;
+    out_sink = (out_sink + stage_v_212) & 255;
+
+    /* Execution Pipeline Stage 213 */
+    int stage_v_213 = (out_sink > 100) ? (chk_sum & 31) : (218 & 31);
+    out_sink = (out_sink + stage_v_213) & 255;
+    chk_sum ^= (stage_v_213 << 1) & 127;
+
+    /* Execution Pipeline Stage 214 */
+    int stage_v_214 = (st_var_0.buffer[1] * 2 + 649) & 63;
+    if (stage_v_214 > 29) {
+        out_sink = (out_sink + stage_v_214 - 5) & 255;
+        if (stage_v_214 > 44) {
+            chk_sum ^= (stage_v_214 & 31);
+        } else {
+            chk_sum = (chk_sum + 3) & 127;
+        }
+    } else {
+        out_sink = (out_sink - stage_v_214 + 9) & 255;
+        chk_sum ^= 0x1A;
+    }
+
+    /* Security Information Flow: Family = multi_step_explicit */
+    int m_step_0 = (sec_r000300_4 + pub_r000300_7 + 25) & 127;
+    int m_step_1 = (m_step_0 + pub_r000300_10 + 29) & 127;
+    int m_step_2 = (m_step_1 + pub_r000300_14 + 8) & 127;
+    int m_step_3 = (m_step_2 + pub_r000300_7 + 5) & 127;
+    int m_step_4 = (m_step_3 + pub_r000300_10 + 14) & 127;
+    int m_step_5 = (m_step_4 + pub_r000300_14 + 14) & 127;
+    int m_step_6 = (m_step_5 + pub_r000300_7 + 27) & 127;
+    out_sink = (out_sink + m_step_6) & 255;
+
+    g_out = out_sink;
+    g_chk = chk_sum;
+    return 0;
+}

@@ -1,0 +1,28 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_4\\miters\\R000786_miter.c",
+  "actual_mqil_leakage": 2,
+  "actual_mqil_assertions_total": 380,
+  "mqil_leak_ratio": 0.0053,
+  "leakage_result": "FAILED",
+  "safety_failures": [],
+  "safety_result": "SUCCESSFUL",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "FAILED",
+  "dataset_status": "LEAKAGE_DETECTED",
+  "cbmc_exit_code": 10,
+  "failed_details": [
+    {
+      "property": "main.assertion.213",
+      "assertion": "l_bound_0_1 == l_bound_0_2"
+    },
+    {
+      "property": "main.assertion.214",
+      "assertion": "l_bound_1_1 == l_bound_1_2"
+    }
+  ],
+  "error": null,
+  "cbmc_verified": true,
+  "cbmc_status": "FAILED",
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_4/miters/R000786_miter.c --unwind 5 --unwinding-assertions --no-standard-checks",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_4\\miters\\R000786_miter.c.cbmc.log"
+}

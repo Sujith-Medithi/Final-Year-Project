@@ -1,0 +1,27 @@
+{
+  "dataset_name": "random_4",
+  "total_programs": 1000,
+  "min_loc_target": 2000,
+  "max_loc_target": 2500,
+  "min_loc_actual": 2014,
+  "max_loc_actual": 2429,
+  "avg_loc": 2225.41,
+  "family_distribution": {
+    "zero_leakage": 100,
+    "direct_leakage": 100,
+    "multi_step_explicit": 100,
+    "arithmetic_flow": 100,
+    "bitwise_flow": 100,
+    "implicit_flow": 100,
+    "nested_implicit_flow": 100,
+    "secret_dependent_loops": 100,
+    "secret_dependent_array": 100,
+    "mixed_control_data": 100
+  },
+  "dataset_status_distribution": {
+    "VALID": 100,
+    "LEAKAGE_DETECTED": 900
+  },
+  "regenerated_count": 48,
+  "total_time_seconds": 260.79
+}

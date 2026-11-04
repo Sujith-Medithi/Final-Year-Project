@@ -1,0 +1,526 @@
+FileAST: 
+  Decl <ext[0]>: name=assert, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=expression, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=expression, quals=[], align=None
+            IdentifierType <type>: names=['int']
+      TypeDecl <type>: declname=assert, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Decl <ext[1]>: name=__CPROVER_assume, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=expression, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=expression, quals=[], align=None
+            IdentifierType <type>: names=['int']
+      TypeDecl <type>: declname=__CPROVER_assume, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Typedef <ext[2]>: name=FILE, quals=[], storage=['typedef']
+    TypeDecl <type>: declname=FILE, quals=[], align=None
+      IdentifierType <type>: names=['void']
+  Typedef <ext[3]>: name=size_t, quals=[], storage=['typedef']
+    TypeDecl <type>: declname=size_t, quals=[], align=None
+      IdentifierType <type>: names=['unsigned', 'int']
+  Decl <ext[4]>: name=stdin_1, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdin_1, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[5]>: name=stdin_2, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdin_2, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[6]>: name=stdin, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdin, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[7]>: name=stdout_1, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdout_1, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[8]>: name=stdout_2, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdout_2, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[9]>: name=stdout, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stdout, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[10]>: name=stderr_1, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stderr_1, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[11]>: name=stderr_2, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stderr_2, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[12]>: name=stderr, quals=[], align=[], storage=['extern'], funcspec=[]
+    PtrDecl <type>: quals=[]
+      TypeDecl <type>: declname=stderr, quals=[], align=None
+        IdentifierType <type>: names=['FILE']
+  Decl <ext[13]>: name=printf, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=format, quals=['const'], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=format, quals=['const'], align=None
+              IdentifierType <type>: names=['char']
+        EllipsisParam <params[1]>: 
+      TypeDecl <type>: declname=printf, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[14]>: name=fprintf, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=stream, quals=[], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=stream, quals=[], align=None
+              IdentifierType <type>: names=['FILE']
+        Decl <params[1]>: name=format, quals=['const'], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=format, quals=['const'], align=None
+              IdentifierType <type>: names=['char']
+        EllipsisParam <params[2]>: 
+      TypeDecl <type>: declname=fprintf, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[15]>: name=sprintf, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=str, quals=[], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=str, quals=[], align=None
+              IdentifierType <type>: names=['char']
+        Decl <params[1]>: name=format, quals=['const'], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=format, quals=['const'], align=None
+              IdentifierType <type>: names=['char']
+        EllipsisParam <params[2]>: 
+      TypeDecl <type>: declname=sprintf, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[16]>: name=snprintf, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=str, quals=[], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=str, quals=[], align=None
+              IdentifierType <type>: names=['char']
+        Decl <params[1]>: name=size, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=size, quals=[], align=None
+            IdentifierType <type>: names=['size_t']
+        Decl <params[2]>: name=format, quals=['const'], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=format, quals=['const'], align=None
+              IdentifierType <type>: names=['char']
+        EllipsisParam <params[3]>: 
+      TypeDecl <type>: declname=snprintf, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[17]>: name=puts, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=str, quals=['const'], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=str, quals=['const'], align=None
+              IdentifierType <type>: names=['char']
+      TypeDecl <type>: declname=puts, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[18]>: name=putchar, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=c, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=c, quals=[], align=None
+            IdentifierType <type>: names=['int']
+      TypeDecl <type>: declname=putchar, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[19]>: name=getchar, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Typename <params[0]>: name=None, quals=[], align=None
+          TypeDecl <type>: declname=None, quals=[], align=None
+            IdentifierType <type>: names=['void']
+      TypeDecl <type>: declname=getchar, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Typedef <ext[20]>: name=size_t, quals=[], storage=['typedef']
+    TypeDecl <type>: declname=size_t, quals=[], align=None
+      IdentifierType <type>: names=['unsigned', 'int']
+  Decl <ext[21]>: name=malloc, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=size, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=size, quals=[], align=None
+            IdentifierType <type>: names=['size_t']
+      PtrDecl <type>: quals=[]
+        TypeDecl <type>: declname=malloc, quals=[], align=None
+          IdentifierType <type>: names=['void']
+  Decl <ext[22]>: name=calloc, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=num, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=num, quals=[], align=None
+            IdentifierType <type>: names=['size_t']
+        Decl <params[1]>: name=size, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=size, quals=[], align=None
+            IdentifierType <type>: names=['size_t']
+      PtrDecl <type>: quals=[]
+        TypeDecl <type>: declname=calloc, quals=[], align=None
+          IdentifierType <type>: names=['void']
+  Decl <ext[23]>: name=realloc, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=ptr, quals=[], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=ptr, quals=[], align=None
+              IdentifierType <type>: names=['void']
+        Decl <params[1]>: name=size, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=size, quals=[], align=None
+            IdentifierType <type>: names=['size_t']
+      PtrDecl <type>: quals=[]
+        TypeDecl <type>: declname=realloc, quals=[], align=None
+          IdentifierType <type>: names=['void']
+  Decl <ext[24]>: name=free, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=ptr, quals=[], align=[], storage=[], funcspec=[]
+          PtrDecl <type>: quals=[]
+            TypeDecl <type>: declname=ptr, quals=[], align=None
+              IdentifierType <type>: names=['void']
+      TypeDecl <type>: declname=free, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Decl <ext[25]>: name=exit, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=status, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=status, quals=[], align=None
+            IdentifierType <type>: names=['int']
+      TypeDecl <type>: declname=exit, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Decl <ext[26]>: name=abort, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Typename <params[0]>: name=None, quals=[], align=None
+          TypeDecl <type>: declname=None, quals=[], align=None
+            IdentifierType <type>: names=['void']
+      TypeDecl <type>: declname=abort, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Decl <ext[27]>: name=abs, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=j, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=j, quals=[], align=None
+            IdentifierType <type>: names=['int']
+      TypeDecl <type>: declname=abs, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[28]>: name=labs, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=j, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=j, quals=[], align=None
+            IdentifierType <type>: names=['long', 'int']
+      TypeDecl <type>: declname=labs, quals=[], align=None
+        IdentifierType <type>: names=['long', 'int']
+  Decl <ext[29]>: name=rand, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Typename <params[0]>: name=None, quals=[], align=None
+          TypeDecl <type>: declname=None, quals=[], align=None
+            IdentifierType <type>: names=['void']
+      TypeDecl <type>: declname=rand, quals=[], align=None
+        IdentifierType <type>: names=['int']
+  Decl <ext[30]>: name=srand, quals=[], align=[], storage=[], funcspec=[]
+    FuncDecl <type>: 
+      ParamList <args>: 
+        Decl <params[0]>: name=seed, quals=[], align=[], storage=[], funcspec=[]
+          TypeDecl <type>: declname=seed, quals=[], align=None
+            IdentifierType <type>: names=['unsigned', 'int']
+      TypeDecl <type>: declname=srand, quals=[], align=None
+        IdentifierType <type>: names=['void']
+  Decl <ext[31]>: name=g_sink_1, quals=[], align=[], storage=[], funcspec=[]
+    TypeDecl <type>: declname=g_sink_1, quals=[], align=None
+      IdentifierType <type>: names=['int']
+    Constant <init>: type=int, value=0
+  Decl <ext[32]>: name=g_sink_2, quals=[], align=[], storage=[], funcspec=[]
+    TypeDecl <type>: declname=g_sink_2, quals=[], align=None
+      IdentifierType <type>: names=['int']
+    Constant <init>: type=int, value=0
+  Decl <ext[33]>: name=g_sink, quals=[], align=[], storage=[], funcspec=[]
+    TypeDecl <type>: declname=g_sink, quals=[], align=None
+      IdentifierType <type>: names=['int']
+    Constant <init>: type=int, value=0
+  FuncDef <ext[34]>: 
+    Decl <decl>: name=security_kernel_2, quals=[], align=[], storage=[], funcspec=[]
+      FuncDecl <type>: 
+        ParamList <args>: 
+          Decl <params[0]>: name=sec_1, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=sec_1, quals=[], align=None
+              IdentifierType <type>: names=['int']
+          Decl <params[1]>: name=pub_1, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=pub_1, quals=[], align=None
+              IdentifierType <type>: names=['int']
+          Decl <params[2]>: name=sec_2, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=sec_2, quals=[], align=None
+              IdentifierType <type>: names=['int']
+          Decl <params[3]>: name=pub_2, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=pub_2, quals=[], align=None
+              IdentifierType <type>: names=['int']
+        TypeDecl <type>: declname=security_kernel_2, quals=[], align=None
+          IdentifierType <type>: names=['void']
+    Compound <body>: 
+      Decl <block_items[0]>: name=mask_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=mask_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=&
+          BinaryOp <left>: op=^
+            ID <left>: name=sec_1
+            Constant <right>: type=int, value=0x3F
+          Constant <right>: type=int, value=15
+      Decl <block_items[1]>: name=mask_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=mask_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=&
+          BinaryOp <left>: op=^
+            ID <left>: name=sec_2
+            Constant <right>: type=int, value=0x3F
+          Constant <right>: type=int, value=15
+      Decl <block_items[2]>: name=acc_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=acc_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=*
+          ID <left>: name=pub_1
+          Constant <right>: type=int, value=3
+      Decl <block_items[3]>: name=acc_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=acc_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=*
+          ID <left>: name=pub_2
+          Constant <right>: type=int, value=3
+      If <block_items[4]>: 
+        BinaryOp <cond>: op=>
+          ID <left>: name=mask_1
+          Constant <right>: type=int, value=8
+        Compound <iftrue>: 
+          Assignment <block_items[0]>: op=+=
+            ID <lvalue>: name=acc_1
+            BinaryOp <rvalue>: op=*
+              ID <left>: name=mask_1
+              Constant <right>: type=int, value=2
+        Compound <iffalse>: 
+          Assignment <block_items[0]>: op=-=
+            ID <lvalue>: name=acc_1
+            BinaryOp <rvalue>: op=+
+              ID <left>: name=mask_1
+              Constant <right>: type=int, value=1
+      If <block_items[5]>: 
+        BinaryOp <cond>: op=>
+          ID <left>: name=mask_2
+          Constant <right>: type=int, value=8
+        Compound <iftrue>: 
+          Assignment <block_items[0]>: op=+=
+            ID <lvalue>: name=acc_2
+            BinaryOp <rvalue>: op=*
+              ID <left>: name=mask_2
+              Constant <right>: type=int, value=2
+        Compound <iffalse>: 
+          Assignment <block_items[0]>: op=-=
+            ID <lvalue>: name=acc_2
+            BinaryOp <rvalue>: op=+
+              ID <left>: name=mask_2
+              Constant <right>: type=int, value=1
+      FuncCall <block_items[6]>: 
+        ID <name>: name=assert
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=mask_1
+            ID <right>: name=mask_2
+      FuncCall <block_items[7]>: 
+        ID <name>: name=assert
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=acc_1
+            ID <right>: name=acc_2
+  FuncDef <ext[35]>: 
+    Decl <decl>: name=security_kernel, quals=[], align=[], storage=[], funcspec=[]
+      FuncDecl <type>: 
+        ParamList <args>: 
+          Decl <params[0]>: name=sec, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=sec, quals=[], align=None
+              IdentifierType <type>: names=['int']
+          Decl <params[1]>: name=pub, quals=[], align=[], storage=[], funcspec=[]
+            TypeDecl <type>: declname=pub, quals=[], align=None
+              IdentifierType <type>: names=['int']
+        TypeDecl <type>: declname=security_kernel, quals=[], align=None
+          IdentifierType <type>: names=['int']
+    Compound <body>: 
+      Decl <block_items[0]>: name=mask, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=mask, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=&
+          BinaryOp <left>: op=^
+            ID <left>: name=sec
+            Constant <right>: type=int, value=0x3F
+          Constant <right>: type=int, value=15
+      Decl <block_items[1]>: name=acc, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=acc, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        BinaryOp <init>: op=*
+          ID <left>: name=pub
+          Constant <right>: type=int, value=3
+      If <block_items[2]>: 
+        BinaryOp <cond>: op=>
+          ID <left>: name=mask
+          Constant <right>: type=int, value=8
+        Compound <iftrue>: 
+          Assignment <block_items[0]>: op=+=
+            ID <lvalue>: name=acc
+            BinaryOp <rvalue>: op=*
+              ID <left>: name=mask
+              Constant <right>: type=int, value=2
+        Compound <iffalse>: 
+          Assignment <block_items[0]>: op=-=
+            ID <lvalue>: name=acc
+            BinaryOp <rvalue>: op=+
+              ID <left>: name=mask
+              Constant <right>: type=int, value=1
+      Return <block_items[3]>: 
+        ID <expr>: name=acc
+  FuncDef <ext[36]>: 
+    Decl <decl>: name=main, quals=[], align=[], storage=[], funcspec=[]
+      FuncDecl <type>: 
+        TypeDecl <type>: declname=main, quals=[], align=None
+          IdentifierType <type>: names=['void']
+    Compound <body>: 
+      Decl <block_items[0]>: name=secret_val_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=secret_val_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      Decl <block_items[1]>: name=secret_val_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=secret_val_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      Decl <block_items[2]>: name=public_val_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=public_val_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      Decl <block_items[3]>: name=public_val_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=public_val_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      FuncCall <block_items[4]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op=&&
+            BinaryOp <left>: op=>=
+              ID <left>: name=public_val_1
+              UnaryOp <right>: op=-
+                Constant <expr>: type=int, value=1000
+            BinaryOp <right>: op=<=
+              ID <left>: name=public_val_1
+              Constant <right>: type=int, value=1000
+      FuncCall <block_items[5]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op=&&
+            BinaryOp <left>: op=>=
+              ID <left>: name=public_val_2
+              UnaryOp <right>: op=-
+                Constant <expr>: type=int, value=1000
+            BinaryOp <right>: op=<=
+              ID <left>: name=public_val_2
+              Constant <right>: type=int, value=1000
+      FuncCall <block_items[6]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op=&&
+            BinaryOp <left>: op=>=
+              ID <left>: name=secret_val_1
+              Constant <right>: type=int, value=0
+            BinaryOp <right>: op=<=
+              ID <left>: name=secret_val_1
+              Constant <right>: type=int, value=255
+      FuncCall <block_items[7]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op=&&
+            BinaryOp <left>: op=>=
+              ID <left>: name=secret_val_2
+              Constant <right>: type=int, value=0
+            BinaryOp <right>: op=<=
+              ID <left>: name=secret_val_2
+              Constant <right>: type=int, value=255
+      Decl <block_items[8]>: name=intermediate_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=intermediate_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      Decl <block_items[9]>: name=intermediate_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=intermediate_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+      Assignment <block_items[10]>: op==
+        ID <lvalue>: name=intermediate_1
+        FuncCall <rvalue>: 
+          ID <name>: name=security_kernel
+          ExprList <args>: 
+            ID <exprs[0]>: name=secret_val_1
+            ID <exprs[1]>: name=public_val_1
+      Assignment <block_items[11]>: op==
+        ID <lvalue>: name=intermediate_2
+        FuncCall <rvalue>: 
+          ID <name>: name=security_kernel
+          ExprList <args>: 
+            ID <exprs[0]>: name=secret_val_2
+            ID <exprs[1]>: name=public_val_2
+      FuncCall <block_items[12]>: 
+        ID <name>: name=security_kernel_2
+        ExprList <args>: 
+          ID <exprs[0]>: name=secret_val_1
+          ID <exprs[1]>: name=public_val_1
+          ID <exprs[2]>: name=secret_val_2
+          ID <exprs[3]>: name=public_val_2
+      Decl <block_items[13]>: name=status_1, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=status_1, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        Constant <init>: type=int, value=0
+      Decl <block_items[14]>: name=status_2, quals=[], align=[], storage=[], funcspec=[]
+        TypeDecl <type>: declname=status_2, quals=[], align=None
+          IdentifierType <type>: names=['int']
+        Constant <init>: type=int, value=0
+      Assignment <block_items[15]>: op==
+        ID <lvalue>: name=status_1
+        BinaryOp <rvalue>: op=+
+          ID <left>: name=status_1
+          Constant <right>: type=int, value=1
+      Assignment <block_items[16]>: op==
+        ID <lvalue>: name=status_2
+        BinaryOp <rvalue>: op=+
+          ID <left>: name=status_2
+          Constant <right>: type=int, value=1
+      Assignment <block_items[17]>: op==
+        ID <lvalue>: name=g_sink_1
+        BinaryOp <rvalue>: op=+
+          ID <left>: name=intermediate_1
+          ID <right>: name=status_1
+      Assignment <block_items[18]>: op==
+        ID <lvalue>: name=g_sink_2
+        BinaryOp <rvalue>: op=+
+          ID <left>: name=intermediate_2
+          ID <right>: name=status_2
+      FuncCall <block_items[19]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=public_val_1
+            ID <right>: name=public_val_2
+      FuncCall <block_items[20]>: 
+        ID <name>: name=__CPROVER_assume
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op=!=
+            ID <left>: name=secret_val_1
+            ID <right>: name=secret_val_2
+      FuncCall <block_items[21]>: 
+        ID <name>: name=assert
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=g_sink_1
+            ID <right>: name=g_sink_2
+      FuncCall <block_items[22]>: 
+        ID <name>: name=assert
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=intermediate_1
+            ID <right>: name=intermediate_2
+      FuncCall <block_items[23]>: 
+        ID <name>: name=assert
+        ExprList <args>: 
+          BinaryOp <exprs[0]>: op===
+            ID <left>: name=status_1
+            ID <right>: name=status_2
