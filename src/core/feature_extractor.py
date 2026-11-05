@@ -809,36 +809,428 @@ def extract_group_b_features(
 
 
 # =============================================================================
-# 3. Unified Extractor & Ratio Computation (D2)
+# 3. Source-Centric Group B Extraction (New Architecture)
+# =============================================================================
+
+def extract_group_b_features_source(
+    source_c_path: Path,
+    input_json_path: Path,
+    miter_c_path: Optional[Path] = None,
+    debug: bool = False
+) -> Dict[str, Any]:
+    """
+    Extracts Group B security features directly from the SOURCE C file AST.
+    Eliminates 2-safety miter self-composition artifact inflation (dual-trace doubling).
+    Extracts assumptions and assertions from the companion miter file if available.
+    """
+    with open(input_json_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+
+    high_vars = set(meta.get("high_vars", []))
+    input_vars = set(meta.get("input_vars", []))
+
+    invalid_high_vars = high_vars - input_vars
+    if invalid_high_vars:
+        raise ValueError(
+            "high_vars must be a subset of input_vars; "
+            f"invalid entries: {sorted(invalid_high_vars)}"
+        )
+
+    low_vars = set(meta.get("low_vars", [v for v in input_vars if v not in high_vars]))
+
+    ast_source = parse_c_ast(Path(source_c_path).resolve())
+
+    # 1. Map function definitions and parameter lists for call-argument binding
+    func_param_map: Dict[str, List[str]] = {}
+    func_defs: List[c_ast.FuncDef] = []
+    func_returns: Dict[str, List[Any]] = {}
+    for ext in ast_source.ext:
+        if isinstance(ext, c_ast.FuncDef):
+            func_defs.append(ext)
+            fn_name = ext.decl.name
+            params = []
+            if ext.decl.type and ext.decl.type.args:
+                for p in ext.decl.type.args.params:
+                    if isinstance(p, c_ast.Decl) and p.name:
+                        params.append(p.name)
+            func_param_map[fn_name] = params
+
+            rets = []
+            class RetCollector(c_ast.NodeVisitor):
+                def visit_Return(self, node):
+                    if node.expr:
+                        rets.append(node.expr)
+                    self.generic_visit(node)
+            RetCollector().visit(ext)
+            func_returns[fn_name] = rets
+
+    source_global_vars = set()
+    for ext in ast_source.ext:
+        if isinstance(ext, c_ast.Decl) and ext.name and ext.name not in LIBC_SYMBOLS:
+            if not isinstance(ext.type, c_ast.FuncDecl):
+                source_global_vars.add(ext.name)
+
+    formal_params: Set[str] = set()
+    for p_list in func_param_map.values():
+        formal_params.update(p_list)
+
+    # 2. Initialize seeds: unsuffixed high_vars directly from source
+    seeds: Set[str] = set(high_vars)
+    tainted_vars: Set[str] = set(seeds)
+    dep_graph: Dict[str, Set[str]] = {}
+
+    def add_dep(dest: str, sources: List[str]):
+        if not dest:
+            return
+        if dest not in dep_graph:
+            dep_graph[dest] = set()
+        for s in sources:
+            if s and s != dest:
+                dep_graph[dest].add(s)
+
+    # 3. Fixpoint Taint Propagation Loop on Source AST
+    while True:
+        before = set(tainted_vars)
+
+        class TaintPropagator(c_ast.NodeVisitor):
+            def visit_Assignment(self, node):
+                rhs_ids = extract_ids(node.rvalue)
+                is_compound = node.op != '='
+                lhs_ids = extract_ids(node.lvalue) if is_compound else set()
+                used_ids = rhs_ids | lhs_ids
+                base = get_lvalue_base(node.lvalue)
+                tainted_used = [v for v in used_ids if v in tainted_vars]
+                if tainted_used:
+                    if base:
+                        tainted_vars.add(base)
+                        add_dep(base, tainted_used)
+
+                if isinstance(node.rvalue, c_ast.FuncCall):
+                    called_fn = node.rvalue.name.name if isinstance(node.rvalue.name, c_ast.ID) else None
+                    if called_fn and called_fn in func_returns:
+                        for ret_expr in func_returns[called_fn]:
+                            ret_ids = extract_ids(ret_expr)
+                            tainted_ret = [v for v in ret_ids if v in tainted_vars]
+                            if tainted_ret and base:
+                                tainted_vars.add(base)
+                                add_dep(base, tainted_ret)
+
+                self.generic_visit(node)
+
+            def visit_Decl(self, node):
+                if node.init:
+                    rhs_ids = extract_ids(node.init)
+                    tainted_rhs = [v for v in rhs_ids if v in tainted_vars]
+                    if tainted_rhs and node.name:
+                        tainted_vars.add(node.name)
+                        add_dep(node.name, tainted_rhs)
+                    if isinstance(node.init, c_ast.FuncCall):
+                        called_fn = node.init.name.name if isinstance(node.init.name, c_ast.ID) else None
+                        if called_fn and called_fn in func_returns:
+                            for ret_expr in func_returns[called_fn]:
+                                ret_ids = extract_ids(ret_expr)
+                                tainted_ret = [v for v in ret_ids if v in tainted_vars]
+                                if tainted_ret and node.name:
+                                    tainted_vars.add(node.name)
+                                    add_dep(node.name, tainted_ret)
+                self.generic_visit(node)
+
+            def visit_FuncCall(self, node):
+                fn_name = node.name.name if isinstance(node.name, c_ast.ID) else None
+                if fn_name and fn_name in func_param_map:
+                    params = func_param_map[fn_name]
+                    if node.args and node.args.exprs:
+                        for idx, arg in enumerate(node.args.exprs):
+                            if idx < len(params):
+                                arg_ids = extract_ids(arg)
+                                tainted_arg_ids = [v for v in arg_ids if v in tainted_vars]
+                                if tainted_arg_ids:
+                                    param_name = params[idx]
+                                    tainted_vars.add(param_name)
+                                    add_dep(param_name, tainted_arg_ids)
+                self.generic_visit(node)
+
+        for fd in func_defs:
+            TaintPropagator().visit(fd)
+
+        if tainted_vars == before:
+            break
+
+    # 4. Counting Pass using fixpoint tainted_vars
+    num_explicit_flows = 0
+    clean_vars_tainted: Set[str] = set()
+    num_culprit_blocks = 0
+    num_implicit_flows = 0
+    num_secret_dependent_prints = 0
+    num_array_accesses = 0
+    secret_indexed_array_accesses = 0
+    num_tainted_returns = 0
+    num_secret_bitops = 0
+
+    class FinalCounterVisitor(c_ast.NodeVisitor):
+        def _count_implicit_statements(self, block_node) -> int:
+            count = 0
+            if block_node is None:
+                return 0
+            items = block_node.block_items or [] if isinstance(block_node, c_ast.Compound) else [block_node]
+            for item in items:
+                if isinstance(item, c_ast.Assignment):
+                    count += 1
+                elif isinstance(item, c_ast.UnaryOp) and item.op in ('++', '--', 'p++', 'p--'):
+                    count += 1
+                elif isinstance(item, c_ast.Return):
+                    count += 1
+                elif isinstance(item, c_ast.FuncCall):
+                    fn_name = item.name.name if isinstance(item.name, c_ast.ID) else ""
+                    if fn_name not in ("assert", "__CPROVER_assume"):
+                        count += 1
+                elif isinstance(item, c_ast.If):
+                    count += 1 + self._count_implicit_statements(item.iftrue) + self._count_implicit_statements(item.iffalse)
+                elif isinstance(item, (c_ast.While, c_ast.DoWhile, c_ast.For)):
+                    count += 1 + self._count_implicit_statements(item.stmt)
+            return count
+
+        def visit_Assignment(self, node):
+            nonlocal num_explicit_flows, num_secret_bitops
+            rhs_ids = extract_ids(node.rvalue)
+            is_compound = node.op != '='
+            lhs_ids = extract_ids(node.lvalue) if is_compound else set()
+            base = get_lvalue_base(node.lvalue)
+
+            is_explicit = any(v in tainted_vars for v in rhs_ids) or any(v in tainted_vars for v in lhs_ids)
+            if not is_explicit and isinstance(node.rvalue, c_ast.FuncCall):
+                called_fn = node.rvalue.name.name if isinstance(node.rvalue.name, c_ast.ID) else None
+                if called_fn and called_fn in func_returns:
+                    for ret_expr in func_returns[called_fn]:
+                        ret_ids = extract_ids(ret_expr)
+                        if any(v in tainted_vars for v in ret_ids):
+                            is_explicit = True
+                            break
+
+            if is_explicit and base not in seeds:
+                num_explicit_flows += 1
+                if base and base not in formal_params:
+                    clean_vars_tainted.add(base)
+
+            if node.op in BITWISE_ASSIGN_OPS and (any(v in tainted_vars for v in lhs_ids) or any(v in tainted_vars for v in rhs_ids)):
+                num_secret_bitops += 1
+            self.generic_visit(node)
+
+        def visit_Decl(self, node):
+            nonlocal num_explicit_flows
+            if node.init:
+                rhs_ids = extract_ids(node.init)
+                is_explicit = any(v in tainted_vars for v in rhs_ids)
+                if not is_explicit and isinstance(node.init, c_ast.FuncCall):
+                    called_fn = node.init.name.name if isinstance(node.init.name, c_ast.ID) else None
+                    if called_fn and called_fn in func_returns:
+                        for ret_expr in func_returns[called_fn]:
+                            ret_ids = extract_ids(ret_expr)
+                            if any(v in tainted_vars for v in ret_ids):
+                                is_explicit = True
+                                break
+
+                if is_explicit and node.name not in seeds:
+                    num_explicit_flows += 1
+                    if node.name and node.name not in formal_params:
+                        clean_vars_tainted.add(node.name)
+            self.generic_visit(node)
+
+        def visit_Return(self, node):
+            nonlocal num_tainted_returns
+            if node.expr:
+                ret_ids = extract_ids(node.expr)
+                if any(v in tainted_vars for v in ret_ids):
+                    num_tainted_returns += 1
+            self.generic_visit(node)
+
+        def visit_BinaryOp(self, node):
+            nonlocal num_secret_bitops
+            if node.op in BITWISE_OPS:
+                left_ids = extract_ids(node.left)
+                right_ids = extract_ids(node.right)
+                if any(v in tainted_vars for v in left_ids) or any(v in tainted_vars for v in right_ids):
+                    num_secret_bitops += 1
+            self.generic_visit(node)
+
+        def visit_If(self, node):
+            nonlocal num_culprit_blocks, num_implicit_flows
+            cond_ids = extract_ids(node.cond)
+            if any(v in tainted_vars for v in cond_ids):
+                num_culprit_blocks += 1
+                num_implicit_flows += self._count_implicit_statements(node.iftrue)
+                if node.iffalse:
+                    num_implicit_flows += self._count_implicit_statements(node.iffalse)
+            self.generic_visit(node)
+
+        def visit_While(self, node):
+            nonlocal num_culprit_blocks, num_implicit_flows
+            cond_ids = extract_ids(node.cond)
+            if any(v in tainted_vars for v in cond_ids):
+                num_culprit_blocks += 1
+                num_implicit_flows += self._count_implicit_statements(node.stmt)
+            self.generic_visit(node)
+
+        def visit_DoWhile(self, node):
+            nonlocal num_culprit_blocks, num_implicit_flows
+            cond_ids = extract_ids(node.cond)
+            if any(v in tainted_vars for v in cond_ids):
+                num_culprit_blocks += 1
+                num_implicit_flows += self._count_implicit_statements(node.stmt)
+            self.generic_visit(node)
+
+        def visit_For(self, node):
+            nonlocal num_culprit_blocks, num_implicit_flows
+            cond_ids = extract_ids(node.cond)
+            if any(v in tainted_vars for v in cond_ids):
+                num_culprit_blocks += 1
+                num_implicit_flows += self._count_implicit_statements(node.stmt)
+            self.generic_visit(node)
+
+        def visit_Switch(self, node):
+            nonlocal num_culprit_blocks, num_implicit_flows
+            cond_ids = extract_ids(node.cond)
+            if any(v in tainted_vars for v in cond_ids):
+                num_culprit_blocks += 1
+                num_implicit_flows += self._count_implicit_statements(node.stmt)
+            self.generic_visit(node)
+
+        def visit_FuncCall(self, node):
+            nonlocal num_secret_dependent_prints
+            fn_name = node.name.name if isinstance(node.name, c_ast.ID) else ""
+            if fn_name in PRINT_FUNCS:
+                arg_ids = set()
+                if node.args and node.args.exprs:
+                    for a in node.args.exprs:
+                        arg_ids |= extract_ids(a)
+                if any(v in tainted_vars for v in arg_ids):
+                    num_secret_dependent_prints += 1
+            self.generic_visit(node)
+
+        def visit_ArrayRef(self, node):
+            nonlocal num_array_accesses, secret_indexed_array_accesses
+            num_array_accesses += 1
+            sub_ids = extract_ids(node.subscript)
+            if any(v in tainted_vars for v in sub_ids):
+                secret_indexed_array_accesses += 1
+            self.generic_visit(node)
+
+    FinalCounterVisitor().visit(ast_source)
+
+    # 5. Calculate max_taint_depth in source
+    depth_memo: Dict[str, int] = {}
+    def get_depth(node: str, visited_path: Set[str]) -> int:
+        if node in seeds:
+            return 0
+        if node in depth_memo:
+            return depth_memo[node]
+        if node not in dep_graph or not dep_graph[node]:
+            return 0
+        max_d = 0
+        for parent in dep_graph[node]:
+            if parent in visited_path:
+                continue
+            d = get_depth(parent, visited_path | {parent})
+            if d + 1 > max_d:
+                max_d = d + 1
+        depth_memo[node] = max_d
+        return max_d
+
+    non_seed_tainted = [v for v in tainted_vars if v not in seeds]
+    max_taint_depth = max([get_depth(v, {v}) for v in non_seed_tainted]) if non_seed_tainted else 0
+
+    # 6. Global variables tainted in source
+    tainted_source_globals = {
+        g for g in source_global_vars
+        if g in tainted_vars and g not in seeds
+    }
+    num_tainted_globals = len(tainted_source_globals)
+
+    # 7. Assumptions and Assertions (from miter if provided, else 0)
+    num_assumptions = 0
+    num_assertions = 0
+    if miter_c_path is not None and Path(miter_c_path).exists():
+        try:
+            ast_miter = parse_c_ast(Path(miter_c_path).resolve())
+            class MiterAssertAssumeVisitor(c_ast.NodeVisitor):
+                def visit_FuncCall(self, node):
+                    nonlocal num_assumptions, num_assertions
+                    fn_name = node.name.name if isinstance(node.name, c_ast.ID) else ""
+                    if fn_name == "assert":
+                        num_assertions += 1
+                    elif fn_name == "__CPROVER_assume":
+                        num_assumptions += 1
+                    self.generic_visit(node)
+            MiterAssertAssumeVisitor().visit(ast_miter)
+        except Exception:
+            pass
+
+    return {
+        "num_high_inputs": len(high_vars),
+        "num_low_inputs": len(low_vars),
+        "num_explicit_flows": num_explicit_flows,
+        "num_culprit_blocks": num_culprit_blocks,
+        "num_implicit_flows": num_implicit_flows,
+        "num_information_leak": len(clean_vars_tainted),
+        "num_secret_dependent_prints": num_secret_dependent_prints,
+        "num_assumptions": num_assumptions,
+        "num_assertions": num_assertions,
+        "num_array_accesses": num_array_accesses,
+        "num_tainted_returns": num_tainted_returns,
+        "num_tainted_globals": num_tainted_globals,
+        "max_taint_depth": max_taint_depth,
+        "num_secret_bitops": num_secret_bitops,
+        "_secret_indexed_array_accesses": secret_indexed_array_accesses,
+        "_tainted_vars": list(tainted_vars)
+    }
+
+
+# =============================================================================
+# 4. Unified Extractor & Ratio Computation (D2)
 # =============================================================================
 
 def extract_all_mqil_features(
     source_c_path: Path,
     input_json_path: Path,
-    miter_c_path: Path,
-    debug: bool = False
+    miter_c_path: Optional[Path] = None,
+    debug: bool = False,
+    architecture: str = "source_centric"
 ) -> Dict[str, Any]:
     """
-    Extracts the complete frozen 22-feature vector:
-      - Group A measured on SOURCE
-      - Group B measured on MITER
-      - Ratios computed from miter-side internal counters per D2
+    Extracts the complete 27-feature vector:
+      - architecture="source_centric" (New Canonical Architecture):
+          All structural and taint/flow features extracted from SOURCE C AST.
+          Assumptions & assertions captured from companion MITER.
+          Guarantees num_information_leak <= num_variables.
+      - architecture="miter_legacy":
+          Extracts Group B from the MITER AST with dual-trace counts.
     """
     source_c_path = Path(source_c_path).resolve()
     input_json_path = Path(input_json_path).resolve()
-    miter_c_path = Path(miter_c_path).resolve()
+    miter_path = Path(miter_c_path).resolve() if miter_c_path else None
 
     group_a = extract_group_a_features(source_c_path, debug=debug)
-    group_b_full = extract_group_b_features(source_c_path, input_json_path, miter_c_path, debug=debug)
 
-    miter_vars = max(group_b_full["_miter_variables"], 1)
-    miter_branches = max(group_b_full["_miter_branches"], 1)
-    arr_acc_count = max(group_b_full["num_array_accesses"], 1)
+    if architecture == "source_centric":
+        group_b_full = extract_group_b_features_source(source_c_path, input_json_path, miter_path, debug=debug)
+        source_vars = max(group_a["num_variables"], 1)
+        source_branches = max(group_a["num_branches"], 1)
+        arr_acc_count = max(group_b_full["num_array_accesses"], 1)
 
-    # Ratios per D2 (guaranteed in [0, 1])
-    taint_ratio = round(group_b_full["num_information_leak"] / miter_vars, 4)
-    secret_branch_ratio = round(group_b_full["num_culprit_blocks"] / miter_branches, 4)
-    secret_memory_ratio = round(group_b_full["_secret_indexed_array_accesses"] / arr_acc_count, 4)
+        # Ratios normalized on source program space
+        taint_ratio = round(group_b_full["num_information_leak"] / source_vars, 4)
+        secret_branch_ratio = round(group_b_full["num_culprit_blocks"] / source_branches, 4)
+        secret_memory_ratio = round(group_b_full["_secret_indexed_array_accesses"] / arr_acc_count, 4)
+    else:
+        assert miter_path is not None, "miter_c_path is required for miter_legacy architecture"
+        group_b_full = extract_group_b_features(source_c_path, input_json_path, miter_path, debug=debug)
+        miter_vars = max(group_b_full["_miter_variables"], 1)
+        miter_branches = max(group_b_full["_miter_branches"], 1)
+        arr_acc_count = max(group_b_full["num_array_accesses"], 1)
+
+        taint_ratio = round(group_b_full["num_information_leak"] / miter_vars, 4)
+        secret_branch_ratio = round(group_b_full["num_culprit_blocks"] / miter_branches, 4)
+        secret_memory_ratio = round(group_b_full["_secret_indexed_array_accesses"] / arr_acc_count, 4)
 
     # Clean internal keys
     group_b = {k: v for k, v in group_b_full.items() if not k.startswith("_")}
@@ -865,7 +1257,8 @@ class ProgramFeatureExtractor:
         self,
         source_c_path: Union[str, Path],
         input_json_path: Optional[Union[str, Path]] = None,
-        miter_c_path: Optional[Union[str, Path]] = None
+        miter_c_path: Optional[Union[str, Path]] = None,
+        architecture: str = "source_centric"
     ) -> Dict[str, Any]:
         source_path = Path(source_c_path).resolve()
         assert source_path.exists(), f"Source file does not exist: {source_path}"
@@ -903,4 +1296,4 @@ class ProgramFeatureExtractor:
 
         assert miter_path.exists(), f"Miter file does not exist: {miter_path}"
 
-        return extract_all_mqil_features(source_path, json_path, miter_path)
+        return extract_all_mqil_features(source_path, json_path, miter_path, architecture=architecture)
