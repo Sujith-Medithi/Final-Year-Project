@@ -1,0 +1,624 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R000645_miter.c",
+  "actual_mqil_leakage": 151,
+  "actual_mqil_assertions_total": 489,
+  "mqil_leak_ratio": 0.3088,
+  "leakage_result": "FAILED",
+  "safety_failures": [],
+  "safety_result": "SUCCESSFUL",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "FAILED",
+  "dataset_status": "LEAKAGE_DETECTED",
+  "cbmc_exit_code": 10,
+  "failed_details": [
+    {
+      "property": "main.assertion.1",
+      "assertion": "g_out_1 == g_out_2"
+    },
+    {
+      "property": "main.assertion.2",
+      "assertion": "g_chk_1 == g_chk_2"
+    },
+    {
+      "property": "main.assertion.3",
+      "assertion": "g_telemetry_1 == g_telemetry_2"
+    },
+    {
+      "property": "main.assertion.4",
+      "assertion": "out_sink_1 == out_sink_2"
+    },
+    {
+      "property": "main.assertion.5",
+      "assertion": "chk_sum_1 == chk_sum_2"
+    },
+    {
+      "property": "main.assertion.28",
+      "assertion": "u_var_1.word == u_var_2.word"
+    },
+    {
+      "property": "main.assertion.29",
+      "assertion": "u_var_1.raw[i_raw] == u_var_2.raw[i_raw]"
+    },
+    {
+      "property": "main.assertion.30",
+      "assertion": "u_var_1.pairs[i_pairs] == u_var_2.pairs[i_pairs]"
+    },
+    {
+      "property": "main.assertion.121",
+      "assertion": "stage_v_89_1 == stage_v_89_2"
+    },
+    {
+      "property": "main.assertion.122",
+      "assertion": "stage_v_90_1 == stage_v_90_2"
+    },
+    {
+      "property": "main.assertion.123",
+      "assertion": "stage_v_91_1 == stage_v_91_2"
+    },
+    {
+      "property": "main.assertion.124",
+      "assertion": "stage_v_92_1 == stage_v_92_2"
+    },
+    {
+      "property": "main.assertion.125",
+      "assertion": "stage_v_93_1 == stage_v_93_2"
+    },
+    {
+      "property": "main.assertion.126",
+      "assertion": "stage_v_94_1 == stage_v_94_2"
+    },
+    {
+      "property": "main.assertion.127",
+      "assertion": "stage_v_95_1 == stage_v_95_2"
+    },
+    {
+      "property": "main.assertion.128",
+      "assertion": "stage_v_96_1 == stage_v_96_2"
+    },
+    {
+      "property": "main.assertion.129",
+      "assertion": "stage_v_97_1 == stage_v_97_2"
+    },
+    {
+      "property": "main.assertion.130",
+      "assertion": "stage_v_98_1 == stage_v_98_2"
+    },
+    {
+      "property": "main.assertion.131",
+      "assertion": "stage_v_99_1 == stage_v_99_2"
+    },
+    {
+      "property": "main.assertion.132",
+      "assertion": "stage_v_100_1 == stage_v_100_2"
+    },
+    {
+      "property": "main.assertion.133",
+      "assertion": "stage_v_101_1 == stage_v_101_2"
+    },
+    {
+      "property": "main.assertion.134",
+      "assertion": "stage_v_102_1 == stage_v_102_2"
+    },
+    {
+      "property": "main.assertion.135",
+      "assertion": "stage_v_103_1 == stage_v_103_2"
+    },
+    {
+      "property": "main.assertion.136",
+      "assertion": "stage_v_104_1 == stage_v_104_2"
+    },
+    {
+      "property": "main.assertion.137",
+      "assertion": "stage_v_105_1 == stage_v_105_2"
+    },
+    {
+      "property": "main.assertion.138",
+      "assertion": "stage_v_106_1 == stage_v_106_2"
+    },
+    {
+      "property": "main.assertion.139",
+      "assertion": "stage_v_107_1 == stage_v_107_2"
+    },
+    {
+      "property": "main.assertion.140",
+      "assertion": "stage_v_108_1 == stage_v_108_2"
+    },
+    {
+      "property": "main.assertion.141",
+      "assertion": "stage_v_109_1 == stage_v_109_2"
+    },
+    {
+      "property": "main.assertion.142",
+      "assertion": "stage_v_110_1 == stage_v_110_2"
+    },
+    {
+      "property": "main.assertion.143",
+      "assertion": "stage_v_111_1 == stage_v_111_2"
+    },
+    {
+      "property": "main.assertion.144",
+      "assertion": "stage_v_112_1 == stage_v_112_2"
+    },
+    {
+      "property": "main.assertion.145",
+      "assertion": "stage_v_113_1 == stage_v_113_2"
+    },
+    {
+      "property": "main.assertion.146",
+      "assertion": "stage_v_114_1 == stage_v_114_2"
+    },
+    {
+      "property": "main.assertion.147",
+      "assertion": "stage_v_115_1 == stage_v_115_2"
+    },
+    {
+      "property": "main.assertion.148",
+      "assertion": "stage_v_116_1 == stage_v_116_2"
+    },
+    {
+      "property": "main.assertion.149",
+      "assertion": "stage_v_117_1 == stage_v_117_2"
+    },
+    {
+      "property": "main.assertion.150",
+      "assertion": "stage_v_118_1 == stage_v_118_2"
+    },
+    {
+      "property": "main.assertion.151",
+      "assertion": "stage_v_119_1 == stage_v_119_2"
+    },
+    {
+      "property": "main.assertion.152",
+      "assertion": "stage_v_120_1 == stage_v_120_2"
+    },
+    {
+      "property": "main.assertion.153",
+      "assertion": "stage_v_121_1 == stage_v_121_2"
+    },
+    {
+      "property": "main.assertion.154",
+      "assertion": "stage_v_122_1 == stage_v_122_2"
+    },
+    {
+      "property": "main.assertion.155",
+      "assertion": "stage_v_123_1 == stage_v_123_2"
+    },
+    {
+      "property": "main.assertion.156",
+      "assertion": "stage_v_124_1 == stage_v_124_2"
+    },
+    {
+      "property": "main.assertion.157",
+      "assertion": "stage_v_125_1 == stage_v_125_2"
+    },
+    {
+      "property": "main.assertion.158",
+      "assertion": "stage_v_126_1 == stage_v_126_2"
+    },
+    {
+      "property": "main.assertion.159",
+      "assertion": "stage_v_127_1 == stage_v_127_2"
+    },
+    {
+      "property": "main.assertion.160",
+      "assertion": "stage_v_128_1 == stage_v_128_2"
+    },
+    {
+      "property": "main.assertion.161",
+      "assertion": "stage_v_129_1 == stage_v_129_2"
+    },
+    {
+      "property": "main.assertion.162",
+      "assertion": "stage_v_130_1 == stage_v_130_2"
+    },
+    {
+      "property": "main.assertion.163",
+      "assertion": "stage_v_131_1 == stage_v_131_2"
+    },
+    {
+      "property": "main.assertion.164",
+      "assertion": "stage_v_132_1 == stage_v_132_2"
+    },
+    {
+      "property": "main.assertion.165",
+      "assertion": "stage_v_133_1 == stage_v_133_2"
+    },
+    {
+      "property": "main.assertion.166",
+      "assertion": "stage_v_134_1 == stage_v_134_2"
+    },
+    {
+      "property": "main.assertion.167",
+      "assertion": "stage_v_135_1 == stage_v_135_2"
+    },
+    {
+      "property": "main.assertion.168",
+      "assertion": "stage_v_136_1 == stage_v_136_2"
+    },
+    {
+      "property": "main.assertion.169",
+      "assertion": "stage_v_137_1 == stage_v_137_2"
+    },
+    {
+      "property": "main.assertion.170",
+      "assertion": "stage_v_138_1 == stage_v_138_2"
+    },
+    {
+      "property": "main.assertion.171",
+      "assertion": "stage_v_139_1 == stage_v_139_2"
+    },
+    {
+      "property": "main.assertion.172",
+      "assertion": "stage_v_140_1 == stage_v_140_2"
+    },
+    {
+      "property": "main.assertion.173",
+      "assertion": "stage_v_141_1 == stage_v_141_2"
+    },
+    {
+      "property": "main.assertion.174",
+      "assertion": "stage_v_142_1 == stage_v_142_2"
+    },
+    {
+      "property": "main.assertion.175",
+      "assertion": "stage_v_143_1 == stage_v_143_2"
+    },
+    {
+      "property": "main.assertion.176",
+      "assertion": "stage_v_144_1 == stage_v_144_2"
+    },
+    {
+      "property": "main.assertion.177",
+      "assertion": "stage_v_145_1 == stage_v_145_2"
+    },
+    {
+      "property": "main.assertion.178",
+      "assertion": "stage_v_146_1 == stage_v_146_2"
+    },
+    {
+      "property": "main.assertion.179",
+      "assertion": "stage_v_147_1 == stage_v_147_2"
+    },
+    {
+      "property": "main.assertion.180",
+      "assertion": "stage_v_148_1 == stage_v_148_2"
+    },
+    {
+      "property": "main.assertion.181",
+      "assertion": "stage_v_149_1 == stage_v_149_2"
+    },
+    {
+      "property": "main.assertion.182",
+      "assertion": "stage_v_150_1 == stage_v_150_2"
+    },
+    {
+      "property": "main.assertion.183",
+      "assertion": "stage_v_151_1 == stage_v_151_2"
+    },
+    {
+      "property": "main.assertion.184",
+      "assertion": "stage_v_152_1 == stage_v_152_2"
+    },
+    {
+      "property": "main.assertion.185",
+      "assertion": "stage_v_153_1 == stage_v_153_2"
+    },
+    {
+      "property": "main.assertion.186",
+      "assertion": "stage_v_154_1 == stage_v_154_2"
+    },
+    {
+      "property": "main.assertion.187",
+      "assertion": "stage_v_155_1 == stage_v_155_2"
+    },
+    {
+      "property": "main.assertion.188",
+      "assertion": "stage_v_156_1 == stage_v_156_2"
+    },
+    {
+      "property": "main.assertion.189",
+      "assertion": "stage_v_157_1 == stage_v_157_2"
+    },
+    {
+      "property": "main.assertion.190",
+      "assertion": "stage_v_158_1 == stage_v_158_2"
+    },
+    {
+      "property": "main.assertion.191",
+      "assertion": "stage_v_159_1 == stage_v_159_2"
+    },
+    {
+      "property": "main.assertion.192",
+      "assertion": "stage_v_160_1 == stage_v_160_2"
+    },
+    {
+      "property": "main.assertion.193",
+      "assertion": "stage_v_161_1 == stage_v_161_2"
+    },
+    {
+      "property": "main.assertion.194",
+      "assertion": "stage_v_162_1 == stage_v_162_2"
+    },
+    {
+      "property": "main.assertion.195",
+      "assertion": "stage_v_163_1 == stage_v_163_2"
+    },
+    {
+      "property": "main.assertion.196",
+      "assertion": "stage_v_164_1 == stage_v_164_2"
+    },
+    {
+      "property": "main.assertion.197",
+      "assertion": "stage_v_165_1 == stage_v_165_2"
+    },
+    {
+      "property": "main.assertion.198",
+      "assertion": "stage_v_166_1 == stage_v_166_2"
+    },
+    {
+      "property": "main.assertion.199",
+      "assertion": "stage_v_167_1 == stage_v_167_2"
+    },
+    {
+      "property": "main.assertion.200",
+      "assertion": "stage_v_168_1 == stage_v_168_2"
+    },
+    {
+      "property": "main.assertion.201",
+      "assertion": "stage_v_169_1 == stage_v_169_2"
+    },
+    {
+      "property": "main.assertion.202",
+      "assertion": "stage_v_170_1 == stage_v_170_2"
+    },
+    {
+      "property": "main.assertion.203",
+      "assertion": "stage_v_171_1 == stage_v_171_2"
+    },
+    {
+      "property": "main.assertion.204",
+      "assertion": "stage_v_172_1 == stage_v_172_2"
+    },
+    {
+      "property": "main.assertion.205",
+      "assertion": "stage_v_173_1 == stage_v_173_2"
+    },
+    {
+      "property": "main.assertion.206",
+      "assertion": "stage_v_174_1 == stage_v_174_2"
+    },
+    {
+      "property": "main.assertion.207",
+      "assertion": "stage_v_175_1 == stage_v_175_2"
+    },
+    {
+      "property": "main.assertion.208",
+      "assertion": "stage_v_176_1 == stage_v_176_2"
+    },
+    {
+      "property": "main.assertion.209",
+      "assertion": "stage_v_177_1 == stage_v_177_2"
+    },
+    {
+      "property": "main.assertion.210",
+      "assertion": "stage_v_178_1 == stage_v_178_2"
+    },
+    {
+      "property": "main.assertion.211",
+      "assertion": "stage_v_179_1 == stage_v_179_2"
+    },
+    {
+      "property": "main.assertion.212",
+      "assertion": "stage_v_180_1 == stage_v_180_2"
+    },
+    {
+      "property": "main.assertion.213",
+      "assertion": "stage_v_181_1 == stage_v_181_2"
+    },
+    {
+      "property": "main.assertion.214",
+      "assertion": "stage_v_182_1 == stage_v_182_2"
+    },
+    {
+      "property": "main.assertion.215",
+      "assertion": "stage_v_183_1 == stage_v_183_2"
+    },
+    {
+      "property": "main.assertion.216",
+      "assertion": "stage_v_184_1 == stage_v_184_2"
+    },
+    {
+      "property": "main.assertion.217",
+      "assertion": "stage_v_185_1 == stage_v_185_2"
+    },
+    {
+      "property": "main.assertion.218",
+      "assertion": "stage_v_186_1 == stage_v_186_2"
+    },
+    {
+      "property": "main.assertion.219",
+      "assertion": "stage_v_187_1 == stage_v_187_2"
+    },
+    {
+      "property": "main.assertion.220",
+      "assertion": "stage_v_188_1 == stage_v_188_2"
+    },
+    {
+      "property": "main.assertion.221",
+      "assertion": "stage_v_189_1 == stage_v_189_2"
+    },
+    {
+      "property": "main.assertion.222",
+      "assertion": "stage_v_190_1 == stage_v_190_2"
+    },
+    {
+      "property": "main.assertion.223",
+      "assertion": "stage_v_191_1 == stage_v_191_2"
+    },
+    {
+      "property": "main.assertion.224",
+      "assertion": "stage_v_192_1 == stage_v_192_2"
+    },
+    {
+      "property": "main.assertion.225",
+      "assertion": "stage_v_193_1 == stage_v_193_2"
+    },
+    {
+      "property": "main.assertion.226",
+      "assertion": "stage_v_194_1 == stage_v_194_2"
+    },
+    {
+      "property": "main.assertion.227",
+      "assertion": "stage_v_195_1 == stage_v_195_2"
+    },
+    {
+      "property": "main.assertion.228",
+      "assertion": "stage_v_196_1 == stage_v_196_2"
+    },
+    {
+      "property": "main.assertion.229",
+      "assertion": "stage_v_197_1 == stage_v_197_2"
+    },
+    {
+      "property": "main.assertion.230",
+      "assertion": "stage_v_198_1 == stage_v_198_2"
+    },
+    {
+      "property": "main.assertion.231",
+      "assertion": "stage_v_199_1 == stage_v_199_2"
+    },
+    {
+      "property": "main.assertion.232",
+      "assertion": "stage_v_200_1 == stage_v_200_2"
+    },
+    {
+      "property": "main.assertion.233",
+      "assertion": "stage_v_201_1 == stage_v_201_2"
+    },
+    {
+      "property": "main.assertion.234",
+      "assertion": "stage_v_202_1 == stage_v_202_2"
+    },
+    {
+      "property": "main.assertion.235",
+      "assertion": "stage_v_203_1 == stage_v_203_2"
+    },
+    {
+      "property": "main.assertion.236",
+      "assertion": "stage_v_204_1 == stage_v_204_2"
+    },
+    {
+      "property": "main.assertion.237",
+      "assertion": "stage_v_205_1 == stage_v_205_2"
+    },
+    {
+      "property": "main.assertion.238",
+      "assertion": "stage_v_206_1 == stage_v_206_2"
+    },
+    {
+      "property": "main.assertion.239",
+      "assertion": "stage_v_207_1 == stage_v_207_2"
+    },
+    {
+      "property": "main.assertion.240",
+      "assertion": "stage_v_208_1 == stage_v_208_2"
+    },
+    {
+      "property": "main.assertion.241",
+      "assertion": "stage_v_209_1 == stage_v_209_2"
+    },
+    {
+      "property": "main.assertion.242",
+      "assertion": "stage_v_210_1 == stage_v_210_2"
+    },
+    {
+      "property": "main.assertion.243",
+      "assertion": "stage_v_211_1 == stage_v_211_2"
+    },
+    {
+      "property": "main.assertion.244",
+      "assertion": "stage_v_212_1 == stage_v_212_2"
+    },
+    {
+      "property": "main.assertion.245",
+      "assertion": "stage_v_213_1 == stage_v_213_2"
+    },
+    {
+      "property": "main.assertion.246",
+      "assertion": "stage_v_214_1 == stage_v_214_2"
+    },
+    {
+      "property": "main.assertion.247",
+      "assertion": "stage_v_215_1 == stage_v_215_2"
+    },
+    {
+      "property": "main.assertion.248",
+      "assertion": "stage_v_216_1 == stage_v_216_2"
+    },
+    {
+      "property": "main.assertion.249",
+      "assertion": "stage_v_217_1 == stage_v_217_2"
+    },
+    {
+      "property": "main.assertion.250",
+      "assertion": "stage_v_218_1 == stage_v_218_2"
+    },
+    {
+      "property": "main.assertion.251",
+      "assertion": "stage_v_219_1 == stage_v_219_2"
+    },
+    {
+      "property": "main.assertion.252",
+      "assertion": "stage_v_220_1 == stage_v_220_2"
+    },
+    {
+      "property": "main.assertion.253",
+      "assertion": "stage_v_221_1 == stage_v_221_2"
+    },
+    {
+      "property": "main.assertion.254",
+      "assertion": "stage_v_222_1 == stage_v_222_2"
+    },
+    {
+      "property": "main.assertion.255",
+      "assertion": "stage_v_223_1 == stage_v_223_2"
+    },
+    {
+      "property": "main.assertion.256",
+      "assertion": "stage_v_224_1 == stage_v_224_2"
+    },
+    {
+      "property": "main.assertion.257",
+      "assertion": "stage_v_225_1 == stage_v_225_2"
+    },
+    {
+      "property": "main.assertion.258",
+      "assertion": "stage_v_226_1 == stage_v_226_2"
+    },
+    {
+      "property": "main.assertion.259",
+      "assertion": "stage_v_227_1 == stage_v_227_2"
+    },
+    {
+      "property": "main.assertion.260",
+      "assertion": "stage_v_228_1 == stage_v_228_2"
+    },
+    {
+      "property": "main.assertion.261",
+      "assertion": "stage_v_229_1 == stage_v_229_2"
+    },
+    {
+      "property": "main.assertion.262",
+      "assertion": "stage_v_230_1 == stage_v_230_2"
+    },
+    {
+      "property": "main.assertion.263",
+      "assertion": "stage_v_231_1 == stage_v_231_2"
+    }
+  ],
+  "error": null,
+  "cbmc_verified": true,
+  "cbmc_status": "FAILED",
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_5/miters/R000645_miter.c --unwind 5 --unwinding-assertions --no-standard-checks",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R000645_miter.c.cbmc.log"
+}

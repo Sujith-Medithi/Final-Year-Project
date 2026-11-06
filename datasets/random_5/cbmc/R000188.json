@@ -1,0 +1,168 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R000188_miter.c",
+  "actual_mqil_leakage": 37,
+  "actual_mqil_assertions_total": 395,
+  "mqil_leak_ratio": 0.0937,
+  "leakage_result": "FAILED",
+  "safety_failures": [],
+  "safety_result": "SUCCESSFUL",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "FAILED",
+  "dataset_status": "LEAKAGE_DETECTED",
+  "cbmc_exit_code": 10,
+  "failed_details": [
+    {
+      "property": "main.assertion.1",
+      "assertion": "g_out_1 == g_out_2"
+    },
+    {
+      "property": "main.assertion.2",
+      "assertion": "g_chk_1 == g_chk_2"
+    },
+    {
+      "property": "main.assertion.3",
+      "assertion": "g_telemetry_1 == g_telemetry_2"
+    },
+    {
+      "property": "main.assertion.4",
+      "assertion": "out_sink_1 == out_sink_2"
+    },
+    {
+      "property": "main.assertion.5",
+      "assertion": "chk_sum_1 == chk_sum_2"
+    },
+    {
+      "property": "main.assertion.6",
+      "assertion": "sec_accum_1 == sec_accum_2"
+    },
+    {
+      "property": "main.assertion.62",
+      "assertion": "stage_v_32_1 == stage_v_32_2"
+    },
+    {
+      "property": "main.assertion.63",
+      "assertion": "stage_v_33_1 == stage_v_33_2"
+    },
+    {
+      "property": "main.assertion.64",
+      "assertion": "stage_v_34_1 == stage_v_34_2"
+    },
+    {
+      "property": "main.assertion.68",
+      "assertion": "stage_v_38_1 == stage_v_38_2"
+    },
+    {
+      "property": "main.assertion.72",
+      "assertion": "stage_v_42_1 == stage_v_42_2"
+    },
+    {
+      "property": "main.assertion.78",
+      "assertion": "stage_v_48_1 == stage_v_48_2"
+    },
+    {
+      "property": "main.assertion.84",
+      "assertion": "stage_v_54_1 == stage_v_54_2"
+    },
+    {
+      "property": "main.assertion.87",
+      "assertion": "stage_v_57_1 == stage_v_57_2"
+    },
+    {
+      "property": "main.assertion.93",
+      "assertion": "stage_v_63_1 == stage_v_63_2"
+    },
+    {
+      "property": "main.assertion.98",
+      "assertion": "stage_v_68_1 == stage_v_68_2"
+    },
+    {
+      "property": "main.assertion.100",
+      "assertion": "stage_v_70_1 == stage_v_70_2"
+    },
+    {
+      "property": "main.assertion.106",
+      "assertion": "stage_v_76_1 == stage_v_76_2"
+    },
+    {
+      "property": "main.assertion.107",
+      "assertion": "stage_v_77_1 == stage_v_77_2"
+    },
+    {
+      "property": "main.assertion.111",
+      "assertion": "stage_v_81_1 == stage_v_81_2"
+    },
+    {
+      "property": "main.assertion.112",
+      "assertion": "stage_v_82_1 == stage_v_82_2"
+    },
+    {
+      "property": "main.assertion.118",
+      "assertion": "stage_v_88_1 == stage_v_88_2"
+    },
+    {
+      "property": "main.assertion.122",
+      "assertion": "stage_v_92_1 == stage_v_92_2"
+    },
+    {
+      "property": "main.assertion.124",
+      "assertion": "stage_v_94_1 == stage_v_94_2"
+    },
+    {
+      "property": "main.assertion.125",
+      "assertion": "stage_v_95_1 == stage_v_95_2"
+    },
+    {
+      "property": "main.assertion.127",
+      "assertion": "stage_v_97_1 == stage_v_97_2"
+    },
+    {
+      "property": "main.assertion.131",
+      "assertion": "stage_v_101_1 == stage_v_101_2"
+    },
+    {
+      "property": "main.assertion.132",
+      "assertion": "stage_v_102_1 == stage_v_102_2"
+    },
+    {
+      "property": "main.assertion.134",
+      "assertion": "stage_v_104_1 == stage_v_104_2"
+    },
+    {
+      "property": "main.assertion.143",
+      "assertion": "stage_v_113_1 == stage_v_113_2"
+    },
+    {
+      "property": "main.assertion.149",
+      "assertion": "stage_v_119_1 == stage_v_119_2"
+    },
+    {
+      "property": "main.assertion.153",
+      "assertion": "stage_v_123_1 == stage_v_123_2"
+    },
+    {
+      "property": "main.assertion.168",
+      "assertion": "stage_v_138_1 == stage_v_138_2"
+    },
+    {
+      "property": "main.assertion.169",
+      "assertion": "stage_v_139_1 == stage_v_139_2"
+    },
+    {
+      "property": "main.assertion.171",
+      "assertion": "stage_v_141_1 == stage_v_141_2"
+    },
+    {
+      "property": "main.assertion.172",
+      "assertion": "stage_v_142_1 == stage_v_142_2"
+    },
+    {
+      "property": "main.assertion.174",
+      "assertion": "stage_v_144_1 == stage_v_144_2"
+    }
+  ],
+  "error": null,
+  "cbmc_verified": true,
+  "cbmc_status": "FAILED",
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_5/miters/R000188_miter.c --unwind 5 --unwinding-assertions --no-standard-checks",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R000188_miter.c.cbmc.log"
+}
