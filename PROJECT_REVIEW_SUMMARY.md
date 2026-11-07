@@ -107,16 +107,12 @@ The MQIL research paper (*Panigrahi & Karfa, 2026*) establishes:
 
 ### Side-by-Side Architectural Summary
 
-| Dimension | Existing Architecture (Legacy Miter) | New Architecture (Finalized Source-Centric) |
+| Dimension | Existing Architecture (Current) | Proposed Architecture (New) |
 | :--- | :--- | :--- |
 | **Group A Features**<br>*(LOC, instructions, branches, loops, variables, arrays, structs, unions)* | Extracted from **Source C AST** (`.c`) | Extracted from **Source C AST** (`.c`) *(Unchanged)* |
 | **Input Counts**<br>*(`num_high_inputs`, `num_low_inputs`)* | Read from `input_args.json` | Read from `input_args.json` *(Unchanged)* |
-| **Group B Security Flows**<br>*(`num_explicit_flows`, `num_implicit_flows`)* | Extracted from **Miter AST** as statement occurrence counts (duplicated across dual traces) | Extracted from **Source C AST** bound to **unique variables** receiving secret flows |
-| **Culprit Blocks**<br>*(`num_culprit_blocks`)* | Extracted from **Miter AST** (duplicated across traces) | Extracted from **Source C AST** ($\text{num\_culprit\_blocks} \le \text{num\_branches}$) |
-| **Assumptions Count**<br>*(`num_assumptions`)* | Counted raw `__CPROVER_assume` calls in Miter (inflated by range checks) | Strictly equal to total inputs: $\text{num\_assumptions} == \text{num\_inputs} (\text{high} + \text{low})$ per MQIL Table III |
-| **Information Leak Count**<br>*(`num_information_leak`)* | Extracted from **Miter AST** (counts `var_1` and `var_2` separately) | Extracted from **Source C AST** (unique internal intermediate clean variables carrying secret taint) |
-| **Input Exclusion** | Public and secret inputs could appear in leaked counts | Inputs (`high_vars`, `low_vars`, formal parameters) strictly excluded from internal leaked counts |
-| **Flow Sensitivity (Def-Kill)** | Monotonic may-taint (variables never cleaned on overwrite) | Unconditional scalar overwrites with clean data kill taint ($\text{x} = 21$ cleans variable $\text{x}$) |
+| **Group B Security Flows**<br>*(`num_explicit_flows`, `num_implicit_flows`, `num_culprit_blocks`)* | Extracted from **Miter AST**<br>(Counted across dual execution traces $\implies$ $2\times$ inflated) | Extracted from **Source C AST**<br>(Exact counts of secret flow operations in the source code) |
+| **Information Leak Count**<br>*(`num_information_leak`)* | Extracted from **Miter AST**<br>(Counts `var_1` and `var_2` separately) | Extracted from **Source C AST**<br>(Counts distinct clean source variables tainted; strictly $\le \text{num\_variables}$) |
 | **Taint Ratio**<br>*(`taint_ratio`)* | $\frac{\text{clean\_vars (Miter)}}{\text{miter\_variables}}$ | $\frac{\text{clean\_vars (Source)}}{\text{num\_variables (Source)}} \in [0.0, 1.0]$ |
 | **Ground Truth Targets**<br>*(`actual_mqil_leakage`, `actual_mqil_assertions_total`, `cbmc_verified`)* | Formally verified by **CBMC on Miter** | Formally verified by **CBMC on Miter** *(Unchanged)* |
 
@@ -136,20 +132,17 @@ int security_kernel(int sec, int pub) {
     }
     return acc;
 }
-// In main(): intermediate = security_kernel(secret_val, public_val); g_sink = intermediate + status;
 ```
 
-| Metric | Existing Architecture | Finalized Source-Centric Architecture | Mathematical Guarantee / Explanation |
+| Metric | Existing Architecture | Proposed Architecture | Explanation |
 | :--- | :---: | :---: | :--- |
 | **`num_variables`** | 9 | **9** | Total variables declared in source program. |
-| **`num_assumptions`** | 6 | **2** | Strictly equal to inputs: $\text{high\_vars} (1) + \text{low\_vars} (1) = 2$. |
-| **`num_culprit_blocks`** | **2** | **1** | Only 1 secret-dependent branch (`mask > 8`), strictly $\le \text{num\_branches} (1)$. |
-| **`num_explicit_flows`** | **10** | **4** | Unique variables with explicit secret flows: `{acc, g_sink, intermediate, mask}` $\le \text{num\_variables} (9)$. |
-| **`num_implicit_flows`** | **4** | **1** | Unique variables modified in culprit blocks: `{acc}` $\le \text{num\_variables} (9)$. |
-| **`num_information_leak`** | **6** | **4** | Unique internal variables carrying secret taint: `{acc, g_sink, intermediate, mask}` $\le \text{num\_variables} (9)$. |
-| **`taint_ratio`** | 0.2308 (6 / 26) | **0.4444** (4 / 9) | Strictly bounded in $[0.0, 1.0]$. |
-| **`secret_branch_ratio`** | 2.0 (inflated) | **1.0** (1 / 1) | Strictly bounded in $[0.0, 1.0]$. |
-| **`actual_mqil_leakage`** | **3** | **3** | Formally verified by CBMC observational equivalence check. |
+| **`num_information_leak`** | **6** | **3** | Existing counted `{mask_1, mask_2, acc_1, acc_2, intermediate_1, intermediate_2}`.<br>Proposed counts `{mask, acc, intermediate}`. |
+| **`num_explicit_flows`** | **10** | **5** | Existing counted 5 assignments twice across both traces. |
+| **`num_implicit_flows`** | **4** | **2** | Existing counted branch body statements twice across both traces. |
+| **`num_culprit_blocks`** | **2** | **1** | Existing counted `if(mask_1)` and `if(mask_2)`. Proposed counts `if(mask)`. |
+| **`taint_ratio`** | 0.2308 (6 / 26) | **0.3333** (3 / 9) | Exactly 3 out of 9 source variables contain secret data. |
+| **`actual_mqil_leakage`** | **3** | **3** | CBMC verified: exactly 3 variables fail observational equivalence. |
 
 ---
 
