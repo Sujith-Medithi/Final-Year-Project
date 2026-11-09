@@ -1,0 +1,19 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R001974_miter.c",
+  "actual_mqil_leakage": null,
+  "actual_mqil_assertions_total": 0,
+  "mqil_leak_ratio": 0.0,
+  "leakage_result": "FAILED",
+  "safety_failures": [],
+  "safety_result": "FAILED",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "TIMEOUT",
+  "dataset_status": "INVALID",
+  "cbmc_exit_code": -1,
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_5/miters/R001974_miter.c --unwind 5 --unwinding-assertions --no-standard-checks",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R001974_miter.c.cbmc.log",
+  "failed_details": [],
+  "error": "CBMC verification timed out after 45s",
+  "cbmc_verified": false,
+  "cbmc_status": "TIMEOUT"
+}

@@ -1,0 +1,19 @@
+{
+  "program": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R001006_miter.c",
+  "actual_mqil_leakage": null,
+  "actual_mqil_assertions_total": 0,
+  "mqil_leak_ratio": 0.0,
+  "leakage_result": "FAILED",
+  "safety_failures": [],
+  "safety_result": "FAILED",
+  "unwinding_failures": [],
+  "overall_cbmc_status": "EXIT_6",
+  "dataset_status": "INVALID",
+  "cbmc_exit_code": 6,
+  "cbmc_command": "wsl -d Ubuntu cbmc /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_5/miters/R001006_miter.c --unwind 5 --unwinding-assertions --no-standard-checks",
+  "cbmc_log": "C:\\Users\\sujit\\OneDrive\\Documents\\FP\\datasets\\random_5\\miters\\R001006_miter.c.cbmc.log",
+  "failed_details": [],
+  "error": "CBMC verification ended with exit code 6. Output tail:\nCBMC version 6.6.0 (cbmc-6.6.0) 64-bit x86_64 linux\nType-checking R001006_miter\nfile /mnt/c/Users/sujit/OneDrive/Documents/FP/datasets/random_5/miters/R001006_miter.c line 238 function fn_R001006_613_1_2: redeclaration of 'fn_R001006_613_1_2::1::offset_95_1' with no linkage\nCONVERSION ERROR",
+  "cbmc_verified": false,
+  "cbmc_status": "EXIT_6"
+}

@@ -24,6 +24,6 @@
   "loop_to_unwind_ratio": 0.4,
   "num_tainted_returns": 0,
   "num_tainted_globals": 3,
-  "max_taint_depth": 10,
+  "max_taint_depth": 12,
   "num_secret_bitops": 2739
 }
